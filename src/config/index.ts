@@ -19,14 +19,10 @@ const schema = joi
       .default('silly'),
 
     // User Service
-    USER_SVC: joi
-      .string()
-      .required(),
-
+    USER_SVC: joi.string().required(),
   })
   .unknown()
   .required();
-
 
 const { error, value: envVars } = schema.validate(process.env);
 if (error) {

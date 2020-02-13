@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
-import { UserService } from './user.service';
-import { ApiResponse, ApiBody, ApiTags } from '@nestjs/swagger';
-import { UserDto } from '../dtos/user.dto';
+import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { CreateUserDto } from '../dtos/create-user.dto';
+import { UserDto } from '../dtos/user.dto';
+import { UserService } from './user.service';
 
 @ApiTags('/users')
 @Controller('/users')
@@ -29,8 +29,9 @@ export class UserController {
     type: [UserDto],
     description: 'Return the created user',
   })
-  async create(@Body() createUserDto: CreateUserDto): Promise<Observable<UserDto>> {
+  async create(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<Observable<UserDto>> {
     return this.userService.createUser(createUserDto);
   }
-
 }
