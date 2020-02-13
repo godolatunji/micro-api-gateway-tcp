@@ -1,11 +1,5 @@
 import { Module } from '@nestjs/common';
-import {
-  Client,
-  ClientProxy,
-  ClientsModule,
-  ClientTCP,
-  Transport,
-} from '@nestjs/microservices';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { config } from './config';
 import { TYPES } from './types';
 import { UserController } from './user/user.controller';
@@ -27,10 +21,4 @@ import { UserService } from './user/user.service';
   controllers: [UserController],
   providers: [UserService],
 })
-export class AppModule {
-  // @Client({ transport: Transport.TCP })
-  // private client: ClientTCP;
-  // async onApplicationBootstrap() {
-  //   await this.client.connect();
-  // }
-}
+export class AppModule {}
