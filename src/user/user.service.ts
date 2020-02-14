@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UserDto } from '../dtos/user.dto';
 import { TYPES } from '../types';
@@ -12,14 +11,11 @@ export class UserService {
 
   allUsers(): Observable<UserDto[]> {
     const pattern = { cmd: 'find' };
-    const response = this.userSvc.send<UserDto[]>(pattern, {});
-    return response.pipe(map((msg: UserDto[]) => msg));
+    return this.userSvc.send<UserDto[]>(pattern, {});
   }
 
   createUser(data: CreateUserDto): Observable<UserDto> {
     const pattern = { cmd: 'create' };
-    return this.userSvc
-      .send<UserDto>(pattern, data)
-      .pipe(map((msg: UserDto) => msg));
+    return this.userSvc.send<UserDto>(pattern, data);
   }
 }
