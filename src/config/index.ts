@@ -20,6 +20,7 @@ const schema = joi
 
     // User Service
     USER_SVC: joi.string().required(),
+    INVENTORY_SVC: joi.string().required(),
   })
   .unknown()
   .required();
@@ -35,4 +36,5 @@ export const config = {
   NODE_ENV: envVars.NODE_ENV,
 
   userSvc: envVars.USER_SVC,
+  inventorySvc: envVars.INVENTORY_SVC,
 };
