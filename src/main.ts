@@ -45,7 +45,7 @@ async function bootstrap() {
    */
   const options = new DocumentBuilder()
     .setTitle('Cars45 API')
-    .setDescription('API Gateway for *.cars45.ng')
+    .setDescription('API Documentation for *.cars45.ng')
     .setVersion('1.0')
     .build();
 

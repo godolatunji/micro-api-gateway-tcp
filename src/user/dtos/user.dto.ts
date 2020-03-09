@@ -1,10 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
 export class UserDto {
   @IsOptional()
-  @ApiProperty()
+  @ApiPropertyOptional()
   id?: number;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   name: string;
 }
