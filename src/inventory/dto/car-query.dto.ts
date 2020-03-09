@@ -68,7 +68,7 @@ export class CarQuery {
 
   @ApiPropertyOptional()
   @IsOptional()
-  numberernalId: string;
+  internalId: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -236,7 +236,7 @@ export class CarQuery {
   cache: boolean;
 
   @ApiPropertyOptional({
-    description: 'fiels you want returned for car e.g ?fields=id,make,model',
+    description: 'fields you want returned for car e.g ?fields=id,make,model',
   })
   @IsOptional()
   fields: string;
