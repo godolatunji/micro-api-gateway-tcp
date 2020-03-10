@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Query, Req, Res } from '@nestjs/common';
 import { ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Observable } from 'rxjs';
-import { success } from '../utils/responses';
+import { handleError, success } from '../utils/responses';
 import { CarArrayResponseDto } from './dto/car-array-response.dto';
 import { CarQuery } from './dto/car-query.dto';
 import { InventoryService } from './inventory.service';
@@ -23,10 +23,14 @@ export class InventoryController {
     @Query() carQuery: CarQuery,
     @Res() res: Response,
   ): Promise<CarArrayResponseDto> {
-    const headers: Request['headers'] = req.headers;
-    const data = await this.inventoryService
-      .listCars(carQuery, headers)
-      .toPromise();
-    return success(res, data);
+    try {
+      const headers: Request['headers'] = req.headers;
+      const data = await this.inventoryService
+        .listCars(carQuery, headers)
+        .toPromise();
+      return success(res, data);
+    } catch (err) {
+      return handleError(res, err.message);
+    }
   }
 }

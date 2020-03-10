@@ -6,7 +6,7 @@ export const success = (res, data) => {
   });
 };
 
-const error = (res, message: string, errocode: number) => {
+export const error = (res, message: string, errocode: number) => {
   return res.status(errocode).json({
     status: false,
     message,
@@ -28,3 +28,12 @@ export class ResponseDto {
   message: string;
   data: any;
 }
+
+export const handleError = (res, message: string) => {
+  const status = Number.parseInt(
+    message.substring(0, message.indexOf(':')),
+    10,
+  );
+  const msg = message.substring(message.indexOf(':') + 1, message.length);
+  return error(res, msg, status);
+};
