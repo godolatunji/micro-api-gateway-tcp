@@ -98,6 +98,6 @@
   "lint-staged": {
     "*.ts": "yarn lint:prettier",
     "!(*spec.).ts": "yarn lint:tslint",
-    "*.{js,json,css,md}": "yarn lint:prettier"
+    "*.{js,json,css}": "yarn lint:prettier"
   }
 }

@@ -1,4 +1,5 @@
 # Microservice API Gateway
+[![codecov](https://codecov.io/gh/Cars45/micro-api-gateway/branch/develop/graph/badge.svg?token=CPMAUIQRZA)](https://codecov.io/gh/Cars45/micro-api-gateway) ![](https://github.com/Cars45/micro-api-gateway/workflows/Test%20Status/badge.svg)
 
 
 ## Description
