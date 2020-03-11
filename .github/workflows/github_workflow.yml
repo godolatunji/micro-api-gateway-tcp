@@ -23,7 +23,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Install Global Dependecies
-      run: npm install -g yarn codecov
+      run: npm install -g codecov
     - name: Package Install
       run: yarn install
     - name: Check Formatting
