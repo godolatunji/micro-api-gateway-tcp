@@ -32,5 +32,8 @@ export class InventoryController {
     } catch (err) {
       return handleError(res, err.message);
     }
+
+    // const headers: Request['headers'] = req.headers;
+    // return this.inventoryService.listCars(carQuery, headers);
   }
 }
