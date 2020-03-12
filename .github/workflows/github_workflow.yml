@@ -1,15 +1,14 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Test Status
+name: Build Status
 
 on:
   push:
-  # pull_request:
-  #   branches: [ master, develop ]
 
 jobs:
-  build:
+  test:
+    name: Run Tests
     runs-on: ubuntu-latest
 
     strategy:
@@ -22,6 +21,13 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Cache Node Modules
+      uses: actions/cache@v1
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn-lock.json') }}
     - name: Install Global Dependecies
       run: npm install -g codecov
     - name: Package Install
@@ -35,3 +41,54 @@ jobs:
 
       env:
         CI: true
+  
+  build:
+    name: Build Project
+    needs: test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache Node Modules
+      uses: actions/cache@v1
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn-lock.json') }}
+    - name: Yarn Build
+      run: yarn build
+
+  deploy_staging:
+    name: Deploy Staging
+    if: github.ref == 'refs/heads/develop'
+    needs: build
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+      steps:
+        - uses: actions/checkout@v2
+        - name: Test Branch
+          run: echo "I am on develop branch"
+
+  deploy_production:
+    name: Deploy production
+    if: github.ref == 'refs/heads/master'
+    needs: build
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+      steps:
+        - uses: actions/checkout@v2
+        - name: Test Branch
+          run: echo "I am on master branch"
