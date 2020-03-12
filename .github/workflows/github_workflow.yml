@@ -1,7 +1,7 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Build Status
+name: Test Status
 
 on:
   push:
@@ -39,11 +39,13 @@ jobs:
       run: npm install -g codecov
     - name: Package Install
       run: yarn install
+    - name: Run Audit
+      run: yarn audit-ci
     - name: Check Formatting
       run: yarn lint
     - name: Run Tests
       run: yarn test
-    - name: Upload Test to CodeCov
+    - name: Upload Test To CodeCov
       run: codecov
 
       env:
@@ -60,7 +62,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Get yarn cache directory path
+    - name: Get Yarn Cache Directory Path
       id: yarn-cache-dir-path
       run: echo "::set-output name=dir::$(yarn cache dir)"
     - name: Cache node module
@@ -71,6 +73,8 @@ jobs:
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
           ${{ runner.os }}-yarn-
+    - name: Package Install
+      run: yarn install
     - name: Yarn Build
       run: yarn build
 
