@@ -27,7 +27,7 @@ jobs:
         cache-name: cache-node-modules
       with:
         path: ~/.npm
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn-lock.json') }}
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn-lock.json') }}
     - name: Install Global Dependecies
       run: npm install -g codecov
     - name: Package Install
