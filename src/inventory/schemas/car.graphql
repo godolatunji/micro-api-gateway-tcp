@@ -1,0 +1,1704 @@
+type Artifacts {
+  list: [String]
+}
+
+# list of artifacts for transit available at start/end
+input ArtifactsInput {
+  list: [String]
+}
+
+type Car {
+  # uuid identifying a car
+  id: ID
+  # internal id of car, format: <Country Code>-<Auto increment counter>
+  internalId: ID
+  sourceCarID: ID
+  make: String
+  model: String
+  trim: String
+  trimDetails: String
+  year: Int
+  mileage: Int
+  color: String
+  vin: String
+  licensePlate: String
+  type: String
+  country: COUNTRY
+  locationTrackerID: String
+  handoverFromSellerAt: ISOString
+  handoverToBuyerAt: ISOString
+  contacts: ContactList
+  status: [Status]
+  location: [Location]
+  financialDetails: FinancialDetails
+  paperwork: Paperwork
+  createdAt: ISOString
+  updatedAt: ISOString
+  deletedAt: ISOString
+  documents: [Document]
+  inspection: Inspection
+  # % of needed files
+  completedDocumentCategoriesPercentage: Float
+  # % of needed files in status "reviewed"
+  completedDocumentCategoriesReviewedPercentage: Float
+  # unique list of completed categories (any status)
+  completedDocumentCategories: [String]
+  # unique list of completed categories (status "reviewed")
+  completedDocumentCategoriesReviewed: [String]
+  # unique list of incomplete categories (any status)
+  incompleteDocumentCategories: [String]
+  # unique list of incomplete categories (status not "reviewed")
+  incompleteDocumentCategoriesReviewed: [String]
+  createdByName: String
+  createdById: String
+  updatedByName: String
+  updatedById: String
+  deletedByName: String
+  deletedById: String
+  availableForPickup: ISOString
+  engineNumber: String
+  registeredCity: String
+  technicalCheckExpiration: ISOString
+  warnings: WarningList
+  refurbishmentStatus: String
+  openTasks: Int
+  pickUpFrom: ISOString
+  bookingId: String
+  grade: String
+  bodyType: String
+}
+
+type CarDeletedOutput {
+  id: String
+  deletedById: String
+  deletedByName: String
+}
+
+type CarList {
+  list: [Car]
+  count: Int
+}
+
+type CarPricing {
+  id: ID
+  carId: ID
+  type: String
+  amount: Float
+  subtype: String
+  comments: String
+  country: COUNTRY
+  vatPercentage: Float
+  vat: Float
+  referenceId: ID
+  entity: String
+  createdAt: ISOString
+  updatedAt: ISOString
+  deletedAt: ISOString
+  createdById: String
+  createdByEmail: String
+  createdByName: String
+  updatedById: String
+  updatedByEmail: String
+  updatedByName: String
+  deletedById: String
+  deletedByName: String
+}
+
+input CarPricingInput {
+  type: String!
+  amount: Float!
+  subtype: String!
+  comments: String
+}
+
+type CitiesList {
+  list: [String]
+}
+
+type Comment {
+  id: ID
+  carId: String
+  country: String
+  carInternalId: String
+  title: String
+  idCreatedBy: ID
+  emailCreatedBy: String
+  description: String
+  mentions: [CommentMention]
+  createdAt: ISOString
+  updatedAt: ISOString
+  deletedAt: ISOString
+  createdByName: String
+  createdById: String
+  updatedByName: String
+  updatedById: String
+  deletedByName: String
+  deletedById: String
+}
+
+type CommentDeletedOutput {
+  id: String
+  carId: String
+  country: String
+  carInternalId: String
+}
+
+type CommentList {
+  list: [Comment]
+  count: Int
+}
+
+type CommentMention {
+  type: String
+  id: String
+  displayName: String
+}
+
+input CommentMentionInput {
+  type: MentionType!
+  id: String!
+  displayName: String
+}
+
+type CommentSavedOutput {
+  comment: Comment
+}
+
+type Contact {
+  id: ID
+  # UUIDv4 of a car
+  carId: ID!
+  company: String
+  salutation: String
+  firstName: String
+  lastName: String
+  email: String
+  phone: String
+  street: String
+  zip: String
+  city: String
+  comment: String
+  type: CONTACTTYPE
+  subtype: String
+  createdAt: ISOString
+  updatedAt: ISOString
+  deletedAt: ISOString
+  createdByName: String
+  createdById: String
+  updatedByName: String
+  updatedById: String
+  deletedByName: String
+  deletedById: String
+  taxId: String
+  bankName: String
+  bankCode: String
+  bankAccountOwner: String
+  bankAccountNumber: String
+  accountType: String
+  bankAccountOwnerTaxId: String
+  bankContactDetails: String
+  maritalStatus: String
+  occupation: String
+  reasonForSelling: String
+  referrerCode: String
+}
+
+type ContactDeletedOutput {
+  id: String
+  carId: String
+}
+
+input ContactInput {
+  id: ID
+  carId: ID
+  company: String
+  salutation: String
+  firstName: String
+  lastName: String
+  email: String
+  phone: String
+  street: String
+  zip: String
+  city: String
+  comment: String
+  type: CONTACTTYPE
+  subtype: String
+  taxId: String
+  bankName: String
+  bankCode: String
+  bankAccountOwner: String
+  bankAccountNumber: String
+  accountType: String
+  bankAccountOwnerTaxId: String
+  bankContactDetails: String
+  maritalStatus: String
+  occupation: String
+  reasonForSelling: String
+}
+
+type ContactList {
+  list: [Contact]
+  count: Int
+}
+
+type ContactSavedOutput {
+  contact: [Contact]
+}
+
+enum CONTACTTYPE {
+  seller
+  contactPersonSeller
+  buyer
+  consignee
+  shippingCompany
+  customs
+  legalRepresentative
+}
+
+enum COUNTRY {
+  CL
+  ID
+  KN
+  MX
+  NG
+  PK
+  TR
+  AR
+  CO
+  ZA
+  GL
+  IN
+  CB
+  PL
+  AE
+  SM
+  GH
+  KE
+}
+
+input CountryOptionMetaInfoInput {
+  color: String
+  lowerBound: Float
+  upperBound: Float
+  fee: Float
+}
+
+type CountryOptions {
+  id: ID
+  type: String!
+  # two character country code
+  country: COUNTRY!
+  name: String!
+  allowedExternally: Boolean
+  biMapping: String
+  metaInfo: CountryOptionsMetaInfo
+  translationKey: String
+  customSort: Int
+  createdAt: ISOString
+  createdById: ID
+  createdByName: String
+}
+
+type CountryOptionsList {
+  list: [CountryOptions]
+  count: Int
+}
+
+type CountryOptionsMetaInfo {
+  color: String
+  lowerBound: Float
+  upperBound: Float
+  fee: Float
+  regionalOffice: String
+}
+
+# dateTime format standard: ISO_8601
+input DateTimeRange {
+  from: String
+  to: String
+}
+
+type DeleteTaskOutput {
+  id: String
+  carId: String
+}
+
+type Document {
+  id: String
+  entity: String
+  fileName: String
+  fileType: String
+  fileSize: Float
+  category: String
+  visibility: String
+  status: String
+  createdAt: ISOString
+  updatedAt: ISOString
+  deletedAt: ISOString
+  createdById: String
+  createdByName: String
+  updatedById: String
+  updatedByName: String
+  deletedById: String
+  deletedByName: String
+}
+
+enum DocumentHandoverToBuyer {
+  YES
+  PARTIALLY
+  NO
+}
+
+enum DocumentStatus {
+  COMPLETE
+  INCOMPLETE
+}
+
+type Event {
+  eventId: ID!
+  correlationId: String
+  CarCreated: SaveCarOutput
+  CarDeleted: CarDeletedOutput
+  CarUpdated: SaveCarOutput
+  CommentCreated: CommentSavedOutput
+  CommentDeleted: CommentDeletedOutput
+  CommentUpdated: CommentSavedOutput
+  ContactCreated: ContactSavedOutput
+  ContactDeleted: ContactDeletedOutput
+  ContactUpdated: ContactSavedOutput
+  HistorySaved: SaveHistoryOutput
+  LinkCreated: LinkSubscriptionOutput
+  LocationCreated: LocationSavedOutput
+  LocationUpdated: LocationSavedOutput
+  PaperworkCreated: PaperworkSavedOutput
+  PaperworkDeleted: PaperworkDeletedOutput
+  PaperworkUpdated: PaperworkSavedOutput
+  StatusCreated: StatusSavedOutput
+  StatusDeleted: StatusDeletedOutput
+  StatusUpdated(where: [SubscriptionFilter]): StatusSavedOutput
+  TaskCreated: TaskSavedOutput
+  TaskDeleted: DeleteTaskOutput
+  TaskUpdated: TaskSavedOutput
+  TransitCreated: TransitSavedOutput
+  TransitDeleted: TransitDeletedOutput
+  TransitUpdated: TransitSavedOutput
+  LinkDeleted: LinkSubscriptionOutput
+}
+
+enum EXPORT {
+  SAP_MEXICO
+}
+
+scalar ExportResult
+
+type FinancialDetails {
+  id: ID
+  carId: ID
+  competitorPrice: Float
+  initialValuationPrice: String
+  sellerExpectationPrice: Float
+  sellerFirstOffer: Float
+  sellerFinalOffer: Float
+  reserveAuctionPrice: Float
+  purchaseCarPrice: Float
+  purchaseOtherPrice: Float
+  sellCarPrice: Float
+  sellOtherPrice: Float
+  purchasePayment: Float
+  buyerPayment: Float
+  purchaseChannel: String
+  purchasedBy: ID
+  purchasedComment: String
+  saleChannel: String
+  saleComment: String
+  salesRep: ID
+  soldTo: ID
+  reservedAt: String
+  boughtAt: String
+  soldAt: String
+  country: COUNTRY
+  invoiceDate: String
+  invoiceNumber: String
+  b2bDeal: String
+  createdAt: ISOString
+  updatedAt: ISOString
+  deletedAt: ISOString
+  purchasePriceTotal: Float
+  sellPriceTotal: Float
+  marginTotal: Float
+  marginPercentage: Float
+  purchasePaymentDone: Float
+  buyerDone: Float
+  purchasePricing: [CarPricing]
+  sellPricing: [CarPricing]
+  offerPurchasePricing: [OfferPricing]
+  offerSellPricing: [OfferPricing]
+  paymentsMade: [Transaction]
+  paymentsReceived: [Transaction]
+  createdByName: String
+  createdById: String
+  updatedByName: String
+  updatedById: String
+  deletedByName: String
+  deletedById: String
+  marketplacePrice: Float
+  marketplaceVisible: Boolean
+  isFeatured: Boolean
+  soldToPhoneNumber: String
+  availableFinancingOptions: [String]
+  chosenFinancingOption: String
+  confirmedAt: String
+  purchaseCancellingReason: String
+  marketplaceImages: [MarketplaceImage]
+  selectedMarketplaces: [String]
+  oldMarketplacePrice: Float
+  paymentRecipient: String
+  paymentType: String
+  riskIndex: Int
+  processingAmount: Float
+  processingReference: [String]
+  dueAmount: Float
+  outstandingAmount: Float
+  dealerExecutive: ID
+}
+
+input FinancialDetailsInputType {
+  competitorPrice: Float
+  initialValuationPrice: String
+  sellerExpectationPrice: Float
+  sellerFirstOffer: Float
+  sellerFinalOffer: Float
+  reserveAuctionPrice: Float
+  purchaseCarPrice: Float
+  purchaseOtherPrice: Float
+  sellCarPrice: Float
+  sellOtherPrice: Float
+  purchasePayment: Float
+  buyerPayment: Float
+  purchaseChannel: String
+  purchasedBy: ID
+  purchasedComment: String
+  saleChannel: String
+  saleComment: String
+  salesRep: ID
+  soldTo: ID
+  reservedAt: String
+  boughtAt: String
+  soldAt: String
+  # two character country code
+  country: COUNTRY
+  invoiceDate: String
+  invoiceNumber: String
+  b2bDeal: String
+  carPricing: [CarPricingInput]
+  marketplacePrice: Float
+  marketplaceVisible: Boolean
+  isFeatured: Boolean
+  soldToPhoneNumber: String
+  availableFinancingOptions: [String]
+  chosenFinancingOption: String
+  confirmedAt: String
+  purchaseCancellingReason: String
+  paymentType: String
+  paymentRecipient: String
+  selectedMarketplaces: [String]
+  oldMarketplacePrice: Float
+  riskIndex: Int
+  dealerExecutive: ID
+}
+
+type History {
+  id: ID
+  # UUIDv4 of a car
+  carId: ID
+  typeId: ID
+  type: String
+  field: String
+  value: String
+  historyMeta: HistoryMeta
+  updatedById: ID
+  updatedByEmail: String
+  operation: String
+  createdAt: ISOString
+  updatedAt: ISOString
+  deletedAt: ISOString
+}
+
+type HistoryList {
+  list: [History]
+  count: Int
+}
+
+scalar HistoryMeta
+
+enum HISTORYTYPE {
+  car
+  comment
+  contact
+  location
+  paperwork
+  status
+  task
+  transit
+}
+
+type Inspection {
+  id: ID
+  createdAt: ISOString
+  inspector: String
+  location: String
+}
+
+scalar ISOString
+
+enum LINK {
+  LINKED
+  SWAPPED
+}
+
+type LinkCar {
+  id: ID
+  carId: ID
+  countryCar: COUNTRY
+  swappedCarId: ID
+  countrySwappedCar: COUNTRY
+  type: String
+  createdAt: ISOString
+  updatedAt: ISOString
+  deletedAt: ISOString
+  createdByName: String
+  createdById: String
+  deletedByName: String
+  deletedById: String
+}
+
+type LinkedCarList {
+  list: [LinkCar]
+  count: Int
+}
+
+type LinkSubscriptionOutput {
+  link: LinkCar
+}
+
+type Location {
+  id: ID
+  carId: ID
+  locationType: LocationGroup!
+  location: String
+  placeId: ID
+  country: String
+  createdAt: ISOString
+  updatedAt: ISOString
+  deletedAt: ISOString
+  createdByName: String
+  createdById: String
+  updatedByName: String
+  updatedById: String
+  deletedByName: String
+  deletedById: String
+}
+
+enum LocationGroup {
+  PURCHASE
+  CURRENT
+  SELLING
+  COMMENT
+  PLACE
+  MARKETPLACE
+}
+
+input LocationInput {
+  locationType: LocationGroup!
+  location: [String]
+  placeId: [String]
+}
+
+type LocationList {
+  list: [Location]
+  count: Int
+}
+
+type LocationSavedOutput {
+  location: [Location]
+}
+
+type MarketPlace {
+  id: ID
+  carId: ID
+  country: COUNTRY
+  auctionedOnInspectionId: ID
+  auctionedOnQCInspectionId: ID
+  marketplaceInspectionId: ID
+  marketplaceQCInspectionId: ID
+  createdAt: ISOString
+  updatedAt: ISOString
+  deletedAt: ISOString
+}
+
+type MarketplaceImage {
+  id: ID
+  description: String
+}
+
+type MarketPlaceList {
+  list: [MarketPlace]
+  count: Int
+}
+
+enum MentionType {
+  USER
+  ROLE
+}
+
+scalar MetaInfo
+
+type Mutation {
+  createCar(
+    make: String!
+    model: String!
+    trim: String
+    trimDetails: String
+    year: Int
+    mileage: Int
+    color: String
+    vin: String
+    licensePlate: String
+    type: String
+    locationTrackerID: String
+    handoverFromSellerAt: String
+    handoverToBuyerAt: String
+    status: [StatusInput]
+    # two character country code
+    country: COUNTRY!
+    contacts: [ContactInput]
+    location: [LocationInput]
+    financialDetails: FinancialDetailsInputType
+    paperwork: PaperworkInput
+    availableForPickup: String
+    engineNumber: String
+    registeredCity: String
+    technicalCheckExpiration: String
+    refurbishmentStatus: String
+    channel: String = "default"
+    pickUpFrom: String
+    bookingId: String
+    grade: String
+    bodyType: String
+  ): Car
+  createCarViaAppointment(country: COUNTRY!, appointmentId: ID!): Car
+  createCarViaCopy(sourceCarID: ID!): Car
+  createComment(
+    # UUIDv4 of a car
+    carId: String!
+    title: String!
+    description: String!
+    mentions: [CommentMentionInput]
+  ): Comment
+  createContact(
+    # UUIDv4 of a car
+    carId: ID!
+    company: String
+    salutation: String
+    firstName: String
+    lastName: String
+    email: String
+    phone: String
+    street: String
+    zip: String
+    city: String
+    comment: String
+    type: CONTACTTYPE!
+    subtype: String
+    taxId: String
+    bankName: String
+    bankCode: String
+    bankAccountOwner: String
+    bankAccountNumber: String
+    accountType: String
+    bankAccountOwnerTaxId: String
+    bankContactDetails: String
+    maritalStatus: String
+    occupation: String
+    reasonForSelling: String
+    referrerCode: String
+  ): Contact
+  createCountryOptions(
+    type: String!
+    # two character country code
+    country: COUNTRY!
+    name: String!
+    metaInfo: CountryOptionMetaInfoInput
+    allowedExternally: Boolean
+    translationKey: String
+    customSort: Int
+  ): CountryOptions
+  createDocument(
+    # UUIDv4 of a car
+    carId: String!
+    comment: String
+    file: String!
+    fileName: String!
+    fileType: String
+    category: String
+  ): [Document]
+  createLocation(
+    carId: String!
+    locationType: LocationGroup!
+    location: String
+    placeId: ID
+  ): Location
+  createPaperwork(
+    carId: String!
+    documentStatus: String
+    documentHandoverToBuyer: DocumentHandoverToBuyer = NO
+    documentHandoverfromSellerDate: String
+    documentHandoverToBuyerDate: String
+    documentLocation: String
+    comment: String
+  ): Paperwork
+  createPdf(
+    # UUIDv4 of a car
+    carId: String!
+  ): Pdf
+  createPlace(
+    # two character country code
+    country: COUNTRY!
+    shortId: String
+    city: String
+    location: String!
+    place: String
+    type: [String]
+    bIMapping: String
+    inspectionPointId: String
+    address1: String
+    address2: String
+    zipcode: String
+    timezone: String
+    timezoneOffset: Int
+    lat: String
+    lng: String
+    region: String
+    position: Int
+    active: Boolean
+    existsOnSimplyBook: Boolean
+    metaInfo: String
+  ): Place
+  createStatus(
+    # UUIDv4 of a car
+    carId: String!
+    statusType: StatusGroup!
+    status: StatusValue!
+    reason: String
+  ): Status
+  createTask(
+    carId: ID!
+    subject: String!
+    description: String
+    group: String
+    type: String
+    status: TASKSTATUS
+    dueDate: String
+    responsible: String
+    priority: Int
+    # deprecated
+    sendEmail: Boolean
+    closeEventReceivers: [String!]
+  ): Task
+  createTransit(
+    carId: ID!
+    type: String
+    status: TransitStatus!
+    driver: String
+    driverCompany: String
+    startLocation: String
+    startPlace: String
+    endLocation: String
+    endPlace: String
+    startTime: String
+    endTime: String
+    availableAtStart: ArtifactsInput
+    availableAtEnd: ArtifactsInput
+    comment: String
+    startMileage: Int
+    endMileage: Int
+    driverId: String
+    bookingId: String
+  ): Transit
+  deleteCar(
+    # UUIDv4 of a cars
+    id: ID!
+  ): Boolean
+  deleteComment(id: ID!): Boolean
+  deleteContact(id: ID!): Boolean
+  deleteCountryOptions(id: ID!): Boolean
+  deleteDocument(documentId: String!): Boolean
+  deleteMarketPlace(carId: ID!): Boolean
+  deletePaperwork(id: ID!): Boolean
+  deletePlace(ids: [String], inspectionPointIds: [String]): Boolean
+  deleteStatus(carId: ID!, status: StatusInput!): Boolean
+  deleteTask(id: String!): Boolean
+  deleteTransit(id: ID): Boolean
+  linkCar(
+    carId: ID!
+    countryCar: COUNTRY!
+    swappedCarId: ID!
+    countrySwappedCar: COUNTRY!
+    type: LINK!
+  ): LinkCar
+  unlinkCar(carId: ID!, swappedCarId: ID!): Boolean
+  updateCar(
+    # UUIDv4 of a car
+    id: ID!
+    make: String
+    model: String
+    trim: String
+    trimDetails: String
+    year: Int
+    mileage: Int
+    color: String
+    vin: String
+    licensePlate: String
+    type: String
+    locationTrackerID: String
+    handoverFromSellerAt: String
+    handoverToBuyerAt: String
+    # two character country code
+    country: COUNTRY
+    contacts: [ContactInput]
+    location: [LocationInput]
+    status: [StatusInput]
+    financialDetails: FinancialDetailsInputType
+    paperwork: PaperworkInput
+    createdAt: String
+    updatedAt: String
+    deletedAt: String
+    availableForPickup: String
+    engineNumber: String
+    registeredCity: String
+    technicalCheckExpiration: String
+    refurbishmentStatus: String
+    pickUpFrom: String
+    bookingId: String
+    grade: String
+    bodyType: String
+  ): Car
+  updateComment(
+    id: ID!
+    carId: String!
+    title: String!
+    description: String!
+    mentions: [CommentMentionInput]
+  ): Comment
+  updateContact(
+    id: ID!
+    carId: ID!
+    company: String
+    salutation: String
+    firstName: String
+    lastName: String
+    email: String
+    phone: String
+    street: String
+    zip: String
+    city: String
+    comment: String
+    type: CONTACTTYPE!
+    subtype: String
+    taxId: String
+    bankName: String
+    bankCode: String
+    bankAccountOwner: String
+    bankAccountNumber: String
+    accountType: String
+    bankAccountOwnerTaxId: String
+    bankContactDetails: String
+    maritalStatus: String
+    occupation: String
+    reasonForSelling: String
+    referrerCode: String
+  ): Contact
+  updateDocument(
+    documentId: String!
+    file: String
+    fileName: String
+    fileType: String
+    category: String
+    comment: String
+  ): Document
+  updateLocation(
+    carId: String!
+    locationType: LocationGroup!
+    location: String
+    placeId: ID
+  ): Location
+  updatePaperwork(
+    id: ID!
+    # UUIDv4 of a car
+    carId: String!
+    documentStatus: String
+    documentHandoverToBuyer: DocumentHandoverToBuyer
+    documentHandoverfromSellerDate: String
+    documentHandoverToBuyerDate: String
+    documentLocation: String
+    comment: String
+  ): Paperwork
+  updatePlace(
+    id: String!
+    # two character country code
+    country: COUNTRY
+    shortId: String
+    city: String
+    location: String
+    place: String
+    type: [String]
+    bIMapping: String
+    inspectionPointId: String
+    address1: String
+    address2: String
+    zipcode: String
+    timezone: String
+    timezoneOffset: Int
+    lat: String
+    lng: String
+    position: Int
+    active: Boolean
+    region: String
+    existsOnSimplyBook: Boolean
+    metaInfo: String
+  ): Place
+  updateStatus(
+    # UUIDv4 of a car
+    carId: String!
+    statusType: StatusGroup!
+    status: StatusValue!
+    reason: String
+  ): Status
+  updateTask(
+    id: ID!
+    subject: String
+    description: String
+    group: String
+    type: String
+    status: TASKSTATUS
+    dueDate: String
+    responsible: String
+    priority: Int
+    # deprecated
+    sendEmail: Boolean
+    closeEventReceivers: [String!]
+  ): Task
+  updateTransit(
+    id: ID!
+    carId: ID
+    type: String
+    status: TransitStatus
+    driver: String
+    driverCompany: String
+    startLocation: String
+    startPlace: String
+    endLocation: String
+    endPlace: String
+    startTime: String
+    endTime: String
+    availableAtStart: ArtifactsInput
+    availableAtEnd: ArtifactsInput
+    comment: String
+    startMileage: Int
+    endMileage: Int
+    driverId: String
+    bookingId: String
+  ): Transit
+  uploadPlaces(country: COUNTRY!, placeData: String!): Boolean
+  upsertMarketPlace(
+    carId: ID!
+    country: COUNTRY
+    auctionedOnInspectionId: ID
+    auctionedOnQCInspectionId: ID
+    marketplaceInspectionId: ID
+    marketplaceQCInspectionId: ID
+  ): MarketPlace
+  upsertPlace(
+    # two character country code
+    country: COUNTRY
+    shortId: String!
+    city: String
+    location: String
+    place: String
+    bIMapping: String
+    inspectionPointId: String
+    address1: String
+    address2: String
+    zipcode: String
+    timezone: String
+    timezoneOffset: Int
+    lat: String
+    lng: String
+    region: String
+    position: Int
+    existsOnSimplyBook: Boolean
+    metaInfo: String
+  ): Place
+}
+
+input NumberRange {
+  from: Int
+  to: Int
+}
+
+type OfferPricing {
+  id: ID
+  carId: ID
+  type: String
+  amount: Float
+  subtype: String
+  country: String
+  createdAt: ISOString
+  updatedAt: ISOString
+  deletedAt: ISOString
+  createdById: String
+  createdByEmail: String
+  createdByName: String
+  updatedById: String
+  updatedByEmail: String
+  updatedByName: String
+  deletedById: String
+  deletedByName: String
+}
+
+enum ORDER {
+  ASC
+  DESC
+}
+
+type Paperwork {
+  id: ID
+  carId: String
+  country: String
+  documentStatus: String
+  documentHandoverToBuyer: String
+  documentHandoverfromSellerDate: ISOString
+  documentHandoverToBuyerDate: ISOString
+  documentLocation: String
+  comment: String
+  createdAt: ISOString
+  updatedAt: ISOString
+  deletedAt: ISOString
+  createdByName: String
+  createdById: String
+  updatedByName: String
+  updatedById: String
+  deletedByName: String
+  deletedById: String
+}
+
+type PaperworkDeletedOutput {
+  id: String
+  carId: String
+}
+
+input PaperworkInput {
+  id: ID
+  # UUIDv4 of a car
+  carId: String
+  documentStatus: String
+  documentHandoverToBuyer: DocumentHandoverToBuyer = NO
+  documentHandoverfromSellerDate: String
+  documentHandoverToBuyerDate: String
+  documentLocation: String
+  comment: String
+}
+
+type PaperworkList {
+  list: [Paperwork]
+  count: Int
+}
+
+type PaperworkSavedOutput {
+  paperwork: Paperwork
+}
+
+type Pdf {
+  id: ID
+  link: String
+}
+
+type Place {
+  id: String
+  sequence: Int
+  country: COUNTRY
+  shortId: String
+  city: String
+  location: String
+  place: String
+  type: [String]
+  bIMapping: String
+  inspectionPointId: String
+  address1: String
+  address2: String
+  zipcode: String
+  timezone: String
+  timezoneOffset: Int
+  lat: String
+  lng: String
+  region: String
+  position: Int
+  active: Boolean
+  existsOnSimplyBook: Boolean
+  metaInfo: MetaInfo
+  createdAt: ISOString
+  updatedAt: ISOString
+  deletedAt: ISOString
+}
+
+type PlaceList {
+  count: Int
+  list: [Place]
+}
+
+type PlainCarOutput {
+  id: ID
+  sourceCarID: ID
+  internalId: ID
+  make: String
+  model: String
+  trim: String
+  trimDetails: String
+  year: Int
+  mileage: Int
+  color: String
+  vin: String
+  licensePlate: String
+  type: String
+  country: COUNTRY
+  locationTrackerID: String
+  handoverFromSellerAt: String
+  handoverToBuyerAt: String
+  availableForPickup: String
+  engineNumber: String
+  registeredCity: String
+  technicalCheckExpiration: String
+  refurbishmentStatus: String
+  pickUpFrom: String
+  createdAt: ISOString
+  updatedAt: ISOString
+  deletedAt: ISOString
+  createdByName: String
+  createdById: String
+  updatedByName: String
+  updatedById: String
+  deletedByName: String
+  deletedById: String
+  updatedByUser: UserList
+  createdByUser: UserList
+  bookingId: String
+  grade: String
+  bodyType: String
+  _diff: [String]
+}
+
+type Query {
+  car(
+    # UUIDv4 of a car
+    id: [ID]
+    # internal id of a car. format <Country Code>-<autoincrement counter>
+    internalId: String
+    country: COUNTRY
+    make: [String!]
+    model: String
+    trim: String
+    trimDetails: String
+    year: NumberRange
+    mileage: NumberRange
+    color: String
+    vin: String
+    licensePlate: String
+    type: String
+    engineNumber: String
+    registeredCity: String
+    status: [StatusInput]
+    location: [LocationInput]
+    createdAt: DateTimeRange
+    createdByName: String
+    updatedAt: DateTimeRange
+    technicalCheckExpiration: DateTimeRange
+    # limit, max allowed is 50
+    limit: Int = 20
+    page: Int = 0
+    sort: [Sort]
+    documentStatus: [String]
+    documentHandoverToBuyer: [DocumentHandoverToBuyer]
+    paperWorkSort: [Sort]
+    reservedAt: DateTimeRange
+    soldAt: DateTimeRange
+    boughtAt: DateTimeRange
+    saleChannel: String
+    purchaseChannel: String
+    refurbishmentStatus: String
+    hasOpenTasks: Boolean
+    openTasks: Int
+    pickUpFrom: DateTimeRange
+    marketplacePrice: NumberRange
+    marketplaceVisible: Boolean
+    soldTo: ID
+    isFeatured: Boolean
+    bookingId: String
+    grade: String
+    bodyType: String
+    cache: Boolean = false
+  ): CarList
+  carsLinked(carId: ID, swappedCarId: ID, type: LINK): LinkedCarList
+  cities(
+    country: COUNTRY!
+    service: SERVICE!
+    region: String
+    active: Boolean
+    existsOnSimplyBook: Boolean = true
+  ): CitiesList
+  comment(
+    id: ID
+    carId: String
+    # limit, max allowed is 100
+    limit: Int = 20
+    page: Int = 0
+    sort: [Sort] = [{ field: "createdAt", order: DESC }
+]
+  ): CommentList
+  contact(
+    id: ID
+    # UUIDv4 of a car
+    carId: ID
+    company: String
+    firstName: String
+    lastName: String
+    email: String
+    phone: String
+    street: String
+    zip: String
+    city: String
+    comment: String
+    type: String
+    subtype: String
+    createdByName: String
+    createdById: String
+    updatedByName: String
+    deletedByName: String
+    deletedById: String
+    taxId: String
+    bankName: String
+    bankCode: String
+    bankAccountOwner: String
+    bankAccountNumber: String
+    accountType: String
+    bankAccountOwnerTaxId: String
+    bankContactDetails: String
+    referrerCode: String
+  ): ContactList
+  countryOptions(
+    id: [ID]
+    type: String
+    # two character country code
+    country: COUNTRY
+    name: String
+    allowedExternally: Boolean
+    biMapping: String
+    hasBiMapping: Boolean
+    translationKey: String
+    sort: [Sort] = [{ field: "name", order: ASC }
+]
+  ): CountryOptionsList
+  exportCar(carId: ID!, type: EXPORT!): ExportResult
+  history(
+    # UUIDv4 of a car
+    carId: ID!
+    contactId: ID
+    commentId: ID
+    type: HISTORYTYPE
+    field: String
+    typeId: String
+    sort: [Sort] = [{ field: "createdAt", order: DESC }
+]
+  ): HistoryList
+  location(
+    # UUIDv4 of a car
+    carId: ID!
+    locationType: LocationGroup
+    location: String
+  ): LocationList
+  marketPlace(carId: [ID!]!): MarketPlaceList
+  paperwork(
+    id: ID
+    carId: String!
+    documentStatus: String
+    documentLocation: String
+  ): PaperworkList
+  place(
+    # two character country code
+    id: ID
+    country: COUNTRY
+    shortId: String
+    city: String
+    location: String
+    place: String
+    type: SERVICE
+    bIMapping: String
+    inspectionPointId: String
+    position: Int
+    region: String
+    active: Boolean
+    existsOnSimplyBook: Boolean
+    sort: [Sort] = [{ field: "createdAt", order: DESC }
+]
+    limit: Int
+    page: Int
+    cache: Boolean = true
+  ): PlaceList
+  statistics(
+    startDate: String!
+    endDate: String!
+    # two character country code
+    country: [COUNTRY]
+    groupByCountry: Boolean
+    groupByTime: TIMERANGE
+  ): StatisticsScalar
+  status(carId: ID!, statusType: StatusGroup, status: StatusValue): StatusList
+  task(
+    # UUIDv4 of a task
+    id: ID
+    # id of a car
+    carId: String
+    subject: String
+    description: String
+    group: [String]
+    type: [String]
+    status: [TASKSTATUS]
+    dueDate: DateTimeRange
+    responsible: [String]
+    priority: [Int]
+    limit: Int = 20
+    page: Int = 0
+    sort: [Sort] = [{ field: "createdAt", order: DESC }
+]
+  ): TaskList
+  transit(
+    id: ID
+    carId: [ID]
+    type: [String]
+    status: [TransitStatus]
+    driver: String
+    driverCompany: String
+    startLocation: [String]
+    startPlace: String
+    endLocation: [String]
+    endPlace: String
+    startTime: DateTimeRange
+    endTime: DateTimeRange
+    availableAtStart: String
+    availableAtEnd: String
+    comment: String
+    startMileage: NumberRange
+    endMileage: NumberRange
+    driverId: String
+    page: Int = 1
+    sort: [Sort]
+    limit: Int = 20
+    make: String
+    model: String
+    trim: String
+    year: NumberRange
+    internalId: String
+    licensePlate: String
+    # two character country code
+    country: COUNTRY
+    bookingId: String
+  ): TransitList
+}
+
+type SaveCarOutput {
+  car: PlainCarOutput
+}
+
+type SaveHistoryOutput {
+  history: String
+}
+
+enum SERVICE {
+  PURCHASE
+  DOCUMENT
+  INSPECTION
+  INSPECTIONCRM
+  INSPECTIONCARPRO
+  SELLING
+  PICKUP
+  CURRENT
+  REGISTRATION
+  AUCTION
+}
+
+input Sort {
+  field: String = "id"
+  order: ORDER = ASC
+}
+
+scalar StatisticsScalar
+
+type Status {
+  id: ID
+  carId: ID
+  statusType: StatusGroup!
+  status: StatusValue!
+  reason: String
+  country: String
+  createdAt: ISOString
+  updatedAt: ISOString
+  deletedAt: ISOString
+  createdByName: String
+  createdById: String
+  updatedByName: String
+  updatedById: String
+  deletedByName: String
+  deletedById: String
+}
+
+type StatusDeletedOutput {
+  id: String
+  carId: String
+}
+
+enum StatusGroup {
+  PHYSICAL
+  LEGAL
+  SELLING
+  PURCHASE_PAYMENT
+  SELLING_PAYMENT
+}
+
+input StatusInput {
+  statusType: StatusGroup!
+  status: [StatusValue]!
+  reason: String
+}
+
+type StatusList {
+  list: [Status]
+  count: Int
+}
+
+type StatusSavedOutput {
+  status: [Status]
+}
+
+# enum to be used in 'status' model, for all status types
+enum StatusValue {
+  ATOWNER
+  INTRANSIT
+  ATOURLOCATION
+  ATBUYER
+  NOTAVAILABLE
+  AVAILABLE
+  RESERVED
+  SOLD
+  OWNER
+  US
+  BUYER
+  NONE
+  PARTIAL
+  COMPLETE
+  ONCONSIGNMENT
+  CONSIGNED
+  NOTCONFIRMED
+  RETURNED
+  PENDINGCLEARANCE
+  INTERNALUSE
+  INQC
+  DEFAULTED
+  CONFIRMED
+  FINANCIER
+  UNDERREPAIR
+  WRITEOFF100
+}
+
+type Subscription {
+  car(lastEventId: ID): Event
+}
+
+input SubscriptionFilter {
+  value: String
+  field: String
+}
+
+type Task {
+  # uuid identifying a task
+  id: ID
+  # id of the car associated
+  carId: ID
+  country: String
+  subject: String
+  description: String
+  group: String
+  type: String
+  status: String
+  dueDate: ISOString
+  responsible: String
+  priority: Int
+  createdAt: ISOString
+  createdByName: String
+  car: PlainCarOutput
+  closeEventReceivers: [String]
+}
+
+type TaskList {
+  list: [Task]
+  count: Int
+}
+
+type TaskSavedOutput {
+  task: Task
+}
+
+enum TASKSTATUS {
+  OPEN
+  CLOSE
+}
+
+enum TIMERANGE {
+  WEEK
+  MONTH
+  QUARTER
+  YEAR
+}
+
+type Transaction {
+  id: ID
+  # UUIDv4 of a car
+  carId: ID
+  type: String
+  amount: Float
+  subtype: String
+  comments: String
+  country: COUNTRY
+  transactionDate: String
+  vatPercentage: Float
+  vat: Float
+  createdAt: ISOString
+  updatedAt: ISOString
+  deletedAt: ISOString
+  createdById: String
+  createdByEmail: String
+  createdByName: String
+  updatedById: String
+  updatedByEmail: String
+  updatedByName: String
+  deletedById: String
+  deletedByName: String
+  status: String
+}
+
+type Transit {
+  id: ID
+  # UUIDv4 of a car
+  carId: ID
+  type: String
+  make: String
+  model: String
+  year: String
+  trim: String
+  internalId: String
+  licensePlate: String
+  # two character country code
+  country: String
+  status: String
+  driver: String
+  driverCompany: String
+  startLocation: String
+  startLocationName: String
+  startPlace: String
+  endLocation: String
+  endLocationName: String
+  endPlace: String
+  startTime: ISOString
+  endTime: ISOString
+  availableAtStart: Artifacts
+  availableAtEnd: Artifacts
+  comment: String
+  startMileage: Int
+  endMileage: Int
+  driverId: String
+  createdById: ID
+  createdByName: String
+  updatedById: ID
+  updatedByName: String
+  deletedById: ID
+  deletedByName: String
+  createdAt: ISOString
+  updatedAt: ISOString
+  bookingId: String
+}
+
+type TransitDeletedOutput {
+  id: ID
+  carId: ID
+}
+
+type TransitList {
+  list: [Transit]
+  count: Int
+}
+
+type TransitPlainOutput {
+  id: ID
+  carId: ID
+  type: String
+  status: String
+  driver: String
+  driverCompany: String
+  startLocation: String
+  startPlace: String
+  endLocation: String
+  endPlace: String
+  startTime: String
+  endTime: String
+  availableAtStart: Artifacts
+  availableAtEnd: Artifacts
+  comment: String
+  startMileage: Int
+  endMileage: Int
+  driverId: String
+  bookingId: String
+  createdById: ID
+  createdByName: String
+  updatedById: ID
+  updatedByName: String
+  deletedById: ID
+  deletedByName: String
+  createdAt: ISOString
+  updatedAt: ISOString
+}
+
+type TransitSavedOutput {
+  transit: TransitPlainOutput
+}
+
+enum TransitStatus {
+  PENDING
+  SCHEDULED
+  RUNNING
+  FINISHED
+  ABORTED
+}
+
+type UserList {
+  id: ID
+  firstname: String
+  lastname: String
+  email: String
+  companyName: String
+}
+
+scalar Warning
+
+type WarningList {
+  count: Int
+  list: Warning
+}
+

@@ -30,10 +30,10 @@ export class ResponseDto {
 }
 
 export const handleError = (res, message: string) => {
-  const status = Number.parseInt(
-    message.substring(0, message.indexOf(':')),
-    10,
-  );
+  let status = Number.parseInt(message.substring(0, message.indexOf(':')), 10);
+  if (!status) {
+    status = 400;
+  }
   const msg = message.substring(message.indexOf(':') + 1, message.length);
   return error(res, msg, status);
 };

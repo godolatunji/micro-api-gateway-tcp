@@ -1,0 +1,203 @@
+type CarData {
+  id: Int
+  price: Float
+  make: String
+  model: String
+  trim: String
+  year: Int
+  transmission: String
+  minprice: Float
+  maxprice: Float
+  minmarketprice: Float
+  maxmarketprice: Float
+  minpriceb: Float
+  maxpriceb: Float
+  priceb: Float
+  location: String
+  priceText: String
+  bodytype: String
+}
+
+input CarDataInput {
+  price: Float!
+  make: String!
+  model: String!
+  trim: String!
+  year: Int!
+  transmission: String
+  minprice: Float
+  maxprice: Float
+  minmarketprice: Float
+  maxmarketprice: Float
+  minpriceb: Float
+  maxpriceb: Float
+  priceb: Float
+  location: String
+  priceText: String
+  bodytype: String
+}
+
+type CarDataList {
+  count: Int
+  list: [CarData]
+}
+
+input CarDataQueryInput {
+  price: Float
+  make: [String]
+  model: [String]
+  trim: [String]
+  year: [Int]
+  transmission: [String]
+  minprice: Float
+  maxprice: Float
+  minmarketprice: Float
+  maxmarketprice: Float
+  minpriceb: Float
+  maxpriceb: Float
+  priceb: Float
+  location: [String]
+  priceText: String
+  bodytype: String
+}
+
+type CarPlateOutput {
+  make: String
+  model: String
+  year: String
+  quote: [Float]
+}
+
+type DeletedType {
+  deleted: Boolean
+}
+
+type IntList {
+  list: [Int]
+}
+
+type LocationList {
+  list: [String]
+}
+
+type MakeList {
+  list: [String]
+  featuredList: [String]
+}
+
+type MarketPrice {
+  # MarketPrice returns a list to provide a price range or a single price
+  marketPrice: [Float]
+}
+
+enum ORDER {
+  ASC
+  DESC
+}
+
+type Query {
+  bodyType(
+    country: String!
+    make: String
+    model: String
+    trim: String
+    year: Int
+  ): StringList
+  createCarData(country: String!, carData: CarDataInput!): CarData
+  deleteCarData(country: String!, ids: [Int!]!): DeletedType
+  getCarByPlate(country: String!, plate: String!): CarPlateOutput
+  getCarData(
+    country: String!
+    carData: CarDataQueryInput
+    transmission: String
+    sort: Sort
+    limit: Int = 20
+    page: Int = 1
+  ): CarDataList
+  location(
+    country: String!
+    make: String
+    model: String
+    trim: String
+    year: Int
+  ): LocationList
+  make(country: String!, year: Int): MakeList
+  marketPrice(
+    country: String!
+    make: String
+    model: String
+    trim: String
+    year: Int
+    transmission: String
+  ): MarketPrice
+  model(country: String!, make: String!, year: Int): StringList
+  quote(
+    country: String!
+    make: String!
+    model: String
+    trim: String
+    year: Int
+    # optional for backward compatibility
+    mileage: Int
+    transmission: String
+    userIdentifier: String
+    location: String
+  ): Quote
+  transmission(
+    country: String!
+    make: String!
+    model: String!
+    year: Int!
+    trim: String!
+  ): StringList
+  trim(country: String!, make: String!, model: String!, year: Int): StringList
+  updateCarData(country: String!, carData: UpdateCarDataInput!): CarData
+  uploadCarData(country: String!, carData: String!): UploadCarData
+  year(
+    country: String!
+    make: String
+    model: String
+    trim: String
+    sort: Sort
+  ): IntList
+}
+
+type Quote {
+  quote: [Float]
+  variant: Int
+  priceText: String
+}
+
+input Sort {
+  field: String!
+  order: ORDER = ASC
+}
+
+type StringList {
+  list: [String]
+}
+
+input UpdateCarDataInput {
+  id: ID!
+  price: Float!
+  make: String!
+  model: String!
+  trim: String!
+  year: Int!
+  transmission: String
+  minprice: Float
+  maxprice: Float
+  minmarketprice: Float
+  maxmarketprice: Float
+  minpriceb: Float
+  maxpriceb: Float
+  priceb: Float
+  location: String
+  priceText: String
+  bodytype: String
+}
+
+type UploadCarData {
+  count: Int
+}
+

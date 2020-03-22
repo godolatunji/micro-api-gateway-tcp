@@ -19,4 +19,13 @@ export class InventoryService {
     const pattern = { cmd: 'listCars' };
     return this.inventorySvc.send<Car[]>(pattern, { carQuery, headers });
   }
+
+  queryBackend(
+    query: string,
+    command: string,
+    headers?: Request['headers'],
+  ): Observable<any> {
+    const pattern = { cmd: command };
+    return this.inventorySvc.send<any>(pattern, { query, headers });
+  }
 }

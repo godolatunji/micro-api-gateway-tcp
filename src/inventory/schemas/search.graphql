@@ -1,0 +1,822 @@
+type Auction {
+  id: ID
+  carId: ID
+  inspectionId: ID
+  groupId: ID
+  start: String
+  end: String
+  status: String
+  type: String
+  visibleRound: Int
+  autoBidPossible: Boolean
+  buyNowPossible: Boolean
+  price: Float
+  buyNowPrice: Float
+  bids: [Bid]
+}
+
+type AuctionStatistics {
+  visibleRound: Int
+  totalBids: Int
+  startPriceRange: StartPriceRange
+  highestBid: HighestBid
+  auctionList: [Auction]
+  highestBidPerDealer: [HighestBidPerDealer]
+}
+
+type Bid {
+  id: ID
+  auctionId: ID
+  amount: Float
+  userId: ID
+  userEmail: String
+  status: String
+  bidType: String
+  updatedAt: String
+  placedById: String
+}
+
+type Car {
+  id: ID
+  internalId: ID
+  sourceCarID: ID
+  make: String
+  model: String
+  trim: String
+  trimDetails: String
+  year: Int
+  mileage: Int
+  color: String
+  vin: String
+  licensePlate: String
+  type: String
+  country: COUNTRY
+  locationTrackerID: String
+  handoverFromSellerAt: String
+  handoverToBuyerAt: String
+  contacts: [Contact]
+  comments: [Comment]
+  status: [Status]
+  location: [Location]
+  selectedLocation(locationType: LocationGroup): Location
+  financialDetails: FinancialDetails
+  carAllowanceTotal: CarAllowanceTotal
+  carAllowance: [CarAllowance]
+  paperwork: Paperwork
+  transit: [Transit]
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+  documents: [Document]
+  inspection: [Inspection]
+  auctionScheduled: Boolean
+  auctionRunning: Boolean
+  hadAuctions: Boolean
+  auction: Auction
+  auctionStatistics: AuctionStatistics
+  history: [History]
+  completedDocumentCategoriesPercentage: Float
+  completedDocumentCategoriesReviewedPercentage: Float
+  completedDocumentCategories: [String]
+  completedDocumentCategoriesReviewed: [String]
+  incompleteDocumentCategories: [String]
+  incompleteDocumentCategoriesReviewed: [String]
+  availableForPickup: String
+  engineNumber: String
+  registeredCity: String
+  technicalCheckExpiration: String
+  warnings: WarningList
+  refurbishmentStatus: String
+  openTasks: Int
+  task: [Task]
+  pickUpFrom: String
+  wishlistDealerIds: [String]
+  bookingId: String
+  grade: String
+  bodyType: String
+  createdById: String
+  createdByUser: UserList
+  createdByName: String
+  updatedById: String
+  updatedByUser: UserList
+  updatedByName: String
+  deletedById: String
+  deletedByUser: UserList
+  deletedByName: String
+  link: [LinkCar]
+}
+
+type CarAllowance {
+  id: ID
+  carId: ID
+  country: COUNTRY
+  type: String
+  amount: Float
+  comments: String
+  createdAt: String
+  updatedAt: String
+  createdById: String
+  createdByName: String
+  updatedById: String
+  updatedByName: String
+}
+
+type CarAllowanceTotal {
+  initialValue: Float
+  currentValue: Float
+}
+
+type CarList {
+  list: [Car]
+  count: Int
+}
+
+type CarPricing {
+  id: ID
+  carId: ID
+  type: String
+  amount: Float
+  subtype: String
+  comments: String
+  country: COUNTRY
+  vatPercentage: Float
+  vat: Float
+  referenceId: ID
+  entity: CarPricingEntity
+  recipient: ID
+  effectiveDate: String
+  createdById: String
+  createdByEmail: String
+  updatedById: String
+  updatedByEmail: String
+  createdAt: String
+  updatedAt: String
+}
+
+enum CarPricingEntity {
+  AUCTION
+  CAR_CHECKOUT_OPTION
+}
+
+enum CarSubfield {
+  status
+  location
+}
+
+type Category {
+  id: ID
+  title: String
+  score: Float
+}
+
+type Comment {
+  id: ID!
+  carId: String!
+  title: String!
+  idCreatedBy: ID!
+  emailCreatedBy: String!
+  description: String!
+  createdAt: String!
+  updatedAt: String!
+  deletedAt: String
+}
+
+type CommentList {
+  list: [Comment]
+  count: Int
+}
+
+type Contact {
+  id: ID
+  carId: ID
+  company: String
+  salutation: String
+  firstName: String
+  lastName: String
+  email: String
+  phone: String
+  street: String
+  zip: String
+  city: String
+  comment: String
+  type: String
+  subtype: String
+  taxId: String
+  bankName: String
+  bankCode: String
+  bankAccountOwner: String
+  bankAccountNumber: String
+  accountType: String
+  bankAccountOwnerTaxId: String
+  bankContactDetails: String
+  maritalStatus: String
+  occupation: String
+  reasonForSelling: String
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+  referrerCode: String
+}
+
+type ContactList {
+  list: [Contact]
+  count: Int
+}
+
+enum COUNTRY {
+  CL
+  ID
+  KN
+  MX
+  NG
+  PK
+  TR
+  AR
+  CO
+  ZA
+  GL
+  IN
+  CB
+  PL
+  AE
+  SM
+  GH
+  KE
+}
+
+# dateTime format standard: ISO_8601
+input DateTimeRange {
+  from: String
+  to: String
+}
+
+type DeleteCarResult {
+  requestId: String
+  total: Int
+  updated: Int
+  deleted: Int
+  success: Boolean
+}
+
+type Document {
+  id: String
+  fileName: String
+  fileType: String
+  fileSize: Float
+  category: String
+  visibility: String
+  status: String
+  entity: String
+}
+
+enum DocumentHandoverToBuyer {
+  YES
+  PARTIALLY
+  NO
+}
+
+type DocumentList {
+  list: [Document]
+  count: Int
+}
+
+type FailedResult {
+  id: ID
+  failedFields: [String]
+}
+
+type FinancialDetails {
+  id: ID
+  carId: ID
+  competitorPrice: Float
+  initialValuationPrice: String
+  sellerExpectationPrice: Float
+  sellerFirstOffer: Float
+  sellerFinalOffer: Float
+  reserveAuctionPrice: Float
+  purchaseCarPrice: Float
+  purchaseOtherPrice: Float
+  sellCarPrice: Float
+  sellOtherPrice: Float
+  purchasePayment: Float
+  buyerPayment: Float
+  purchaseChannel: String
+  purchasedBy: ID
+  purchasedByUser: UserList
+  purchasedComment: String
+  saleChannel: String
+  saleComment: String
+  salesRep: ID
+  salesRepUser: UserList
+  soldTo: ID
+  soldToUser: UserList
+  reservedAt: String
+  boughtAt: String
+  soldAt: String
+  country: COUNTRY
+  invoiceDate: String
+  invoiceNumber: String
+  b2bDeal: String
+  soldToPhoneNumber: String
+  availableFinancingOptions: [String]
+  chosenFinancingOption: String
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+  purchasePriceTotal: Float
+  sellPriceTotal: Float
+  marginTotal: Float
+  marginPercentage: Float
+  purchasePaymentDone: Float
+  buyerDone: Float
+  purchasePricing: [CarPricing]
+  sellPricing: [CarPricing]
+  offerPurchasePricing: [OfferPricing]
+  offerSellPricing: [OfferPricing]
+  paymentsMade: [Transaction]
+  paymentsReceived: [Transaction]
+  isFeatured: Boolean
+  marketplacePrice: Float
+  marketplaceVisible: Boolean
+  confirmedAt: String
+  purchaseCancellingReason: String
+  marketplaceImages: [MarketplaceImage]
+  selectedMarketplaces: [String]
+  oldMarketplacePrice: Float
+  paymentRecipient: String
+  paymentType: String
+  riskIndex: Int
+  dealerExecutive: ID
+}
+
+input FinancialDetailsInputType {
+  competitorPrice: Float
+  initialValuationPrice: String
+  sellerExpectationPrice: Float
+  sellerFirstOffer: Float
+  sellerFinalOffer: Float
+  reserveAuctionPrice: Float
+  purchaseCarPrice: Float
+  purchaseOtherPrice: Float
+  purchasePriceTotal: Float
+  sellCarPrice: Float
+  sellOtherPrice: Float
+  sellPriceTotal: Float
+  marginTotal: Float
+  marginPercentage: Float
+  purchasePayment: Float
+  purchasePaymentDone: Float
+  buyerPayment: Float
+  buyerDone: Float
+  purchaseChannel: String
+  purchasedBy: ID
+  purchasedComment: String
+  saleChannel: String
+  saleComment: String
+  salesRep: ID
+  soldTo: ID
+  boughtAt: String
+  soldAt: String
+  country: COUNTRY
+  b2bDeal: String
+  soldToPhoneNumber: String
+  availableFinancingOptions: [String]
+  chosenFinancingOption: String
+  isFeatured: Boolean
+  marketplacePrice: Float
+  marketplaceVisible: Boolean
+  confirmedAt: DateTimeRange
+  purchaseCancellingReason: String
+  selectedMarketplaces: [String]
+  offerPricing: OfferPricingInput
+  marketplaceImages: [MarketplaceImageInput]
+  oldMarketplacePrice: NumberRange
+}
+
+type FixDuplicateSubfieldResult {
+  requestId: String
+  success: Boolean
+  total: Int
+  updated: Int
+}
+
+type Gallery {
+  titleId: String
+  images: [Image]
+}
+
+type HighestBid {
+  id: ID
+  userId: ID
+  userEmail: String
+  amount: Float
+  bidType: String
+}
+
+type HighestBidPerDealer {
+  dealerId: ID
+  amount: Float
+}
+
+type History {
+  id: ID!
+  carId: ID!
+  typeId: ID
+  type: String
+  field: String!
+  value: String!
+  updatedById: ID!
+  updatedByEmail: String!
+  operation: String
+  createdAt: String!
+  updatedAt: String!
+  deletedAt: String
+}
+
+type Image {
+  id: ID
+  description: String
+}
+
+type Inspection {
+  id: ID
+  createdAt: Float
+  updatedAt: Float
+  inspector: String
+  type: String
+  location: String
+  purchased: Boolean
+  report: Report
+  galleries: [Gallery]
+  categories: [Category]
+  bookingCode: String
+  startTime: Float
+  endTime: Float
+}
+
+input InspectionInput {
+  id: ID
+  createdAt: Float
+  updatedAt: Float
+  inspector: String
+  location: String
+  purchased: Boolean
+  bookingCode: String
+}
+
+type LinkCar {
+  id: ID
+  carId: ID
+  countryCar: COUNTRY
+  swappedCarId: ID
+  countrySwappedCar: COUNTRY
+  type: String
+  createdAt: String
+  updatedAt: String
+  createdByName: String
+  createdById: String
+}
+
+type Location {
+  locationType: String!
+  location: String
+  placeId: ID
+}
+
+enum LocationGroup {
+  PURCHASE
+  CURRENT
+  SELLING
+  COMMENT
+  PLACE
+}
+
+input LocationInput {
+  locationType: LocationGroup!
+  location: [String]
+  placeId: [ID]
+}
+
+type LocationList {
+  list: [Location]
+  count: Int
+}
+
+type MarketplaceImage {
+  id: ID
+  description: String
+}
+
+input MarketplaceImageInput {
+  id: ID
+  description: String
+}
+
+type Mutation {
+  deleteCar(limit: Int = 20): DeleteCarResult
+  fixDuplicateSubfield(
+    subfields: [CarSubfield!]
+    updatedAt: DateTimeRange!
+    maxSize: Int! = 10000
+  ): FixDuplicateSubfieldResult
+  fixStatusType(
+    updatedAt: DateTimeRange!
+    maxSize: Int! = 10000
+  ): FixDuplicateSubfieldResult
+  updateCar(id: [ID!]!): UpdateResult
+}
+
+input NumberRange {
+  from: Int
+  to: Int
+}
+
+enum OFFER_PRICING_TYPE {
+  PURCHASE
+  SELL
+}
+
+type OfferPricing {
+  id: ID
+  carId: ID
+  type: String
+  amount: Float
+  subtype: String
+  country: String
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+  createdById: String
+  createdByEmail: String
+  createdByName: String
+  updatedById: String
+  updatedByEmail: String
+  updatedByName: String
+  deletedById: String
+  deletedByName: String
+}
+
+input OfferPricingInput {
+  type: OFFER_PRICING_TYPE
+  subtype: String
+  country: COUNTRY
+  amount: NumberRange
+}
+
+enum ORDER {
+  ASC
+  DESC
+}
+
+type Paperwork {
+  id: ID
+  carId: String
+  documentStatus: String
+  documentHandoverToBuyer: String
+  documentHandoverfromSellerDate: String
+  documentHandoverToBuyerDate: String
+  documentLocation: String
+  comment: String
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+}
+
+type PaperworkList {
+  list: [Paperwork]
+  count: Int
+}
+
+type Query {
+  archiveHistory: Boolean
+  car(
+    # UUIDv4 of a car
+    id: [ID]
+    # internal id of a car. format <Country Code>-<autoincrement counter>
+    internalId: String
+    make: [String!]
+    model: String
+    trim: String
+    trimDetails: String
+    year: NumberRange
+    mileage: NumberRange
+    color: String
+    vin: String
+    licensePlate: String
+    type: String
+    engineNumber: String
+    registeredCity: String
+    status: [StatusInput]
+    location: [LocationInput]
+    purchaseCarPrice: NumberRange
+    sellCarPrice: NumberRange
+    auctionScheduled: Boolean
+    auctionRunning: Boolean
+    hadAuctions: Boolean
+    createdAt: DateTimeRange
+    updatedAt: DateTimeRange
+    technicalCheckExpiration: DateTimeRange
+    # limit, max allowed is 100
+    limit: Int = 20
+    page: Int = 1
+    sort: [Sort] = [{ field: "id", order: ASC }
+]
+    documentStatus: [String]
+    documentHandoverToBuyer: [DocumentHandoverToBuyer]
+    paperWorkSort: [Sort]
+    reservedAt: DateTimeRange
+    soldAt: DateTimeRange
+    boughtAt: DateTimeRange
+    saleChannel: String
+    purchaseChannel: String
+    refurbishmentStatus: String
+    financialDetails: FinancialDetailsInputType
+    inspection: InspectionInput
+    hasOpenTasks: Boolean
+    openTasks: Int
+    sourceCarID: String
+    pickUpFrom: DateTimeRange
+    marketplacePrice: NumberRange
+    marketplaceVisible: Boolean
+    soldTo: ID
+    isFeatured: Boolean
+    bookingId: String
+    grade: String
+    bodyType: String
+    createdById: String
+    createdByName: String
+    updatedById: String
+    updatedByName: String
+    deletedById: String
+    deletedByName: String
+  ): CarList
+  similarCar(id: ID, page: Int = 1, limit: Int = 20): [Car]
+}
+
+type Range {
+  min: Float
+  max: Float
+}
+
+scalar Report
+
+input Sort {
+  field: String = "id"
+  order: ORDER = ASC
+}
+
+type StartPriceRange {
+  price: Range
+  buyNowPrice: Range
+}
+
+type Status {
+  statusType: String
+  status: String
+}
+
+enum StatusGroup {
+  PHYSICAL
+  LEGAL
+  SELLING
+  PURCHASE_PAYMENT
+  SELLING_PAYMENT
+}
+
+input StatusInput {
+  statusType: StatusGroup!
+  status: [StatusValue]!
+}
+
+type StatusList {
+  list: [Status]
+  count: Int
+}
+
+# enum to be used in 'status' model, for all status types
+enum StatusValue {
+  ATOWNER
+  INTRANSIT
+  ATOURLOCATION
+  ATBUYER
+  NOTAVAILABLE
+  AVAILABLE
+  RESERVED
+  SOLD
+  OWNER
+  US
+  BUYER
+  NONE
+  PARTIAL
+  COMPLETE
+  ONCONSIGNMENT
+  CONSIGNED
+  NOTCONFIRMED
+  RETURNED
+  PENDINGCLEARANCE
+  INTERNALUSE
+  INQC
+  DEFAULTED
+  CONFIRMED
+  FINANCIER
+  UNDERREPAIR
+}
+
+type StringList {
+  list: [String]
+}
+
+type Task {
+  # uuid identifying a task
+  id: ID
+  # id of the car associated
+  carId: ID
+  country: String
+  subject: String
+  description: String
+  group: String
+  type: String
+  status: String
+  dueDate: String
+  responsible: String
+  priority: Int
+  createdAt: String
+  createdByName: String
+  closeEventReceivers: [String]
+}
+
+enum TIMERANGE {
+  WEEK
+  MONTH
+  QUARTER
+  YEAR
+}
+
+type Transaction {
+  id: ID
+  carId: ID
+  type: String
+  amount: Float
+  subtype: String
+  comments: String
+  country: COUNTRY
+  transactionDate: String
+  vatPercentage: Float
+  vat: Float
+  createdById: String
+  createdByEmail: String
+  updatedById: String
+  updatedByEmail: String
+  createdAt: String
+  updatedAt: String
+}
+
+type Transit {
+  id: ID
+  carId: ID
+  type: String
+  status: String
+  driver: String
+  driverCompany: String
+  startLocation: String
+  startPlace: String
+  endLocation: String
+  endPlace: String
+  startTime: String
+  endTime: String
+  availableAtStart: StringList
+  availableAtEnd: StringList
+  comment: String
+  startMileage: Int
+  endMileage: Int
+  createdById: ID
+  createdByName: String
+  updatedById: ID
+  updatedByName: String
+  deletedById: ID
+  deletedByName: String
+  createdAt: String
+  updatedAt: String
+  bookingId: String
+}
+
+type UpdateResult {
+  updated: Boolean
+  failed: [FailedResult]
+}
+
+type UserList {
+  id: ID
+  firstname: String
+  lastname: String
+  email: String
+  companyName: String
+}
+
+scalar Warning
+
+type WarningList {
+  count: Int
+  list: Warning
+}
+
