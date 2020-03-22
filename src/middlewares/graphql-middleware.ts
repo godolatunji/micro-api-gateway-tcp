@@ -1,7 +1,7 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { InventoryService } from '../inventory/inventory.service';
-import { handleError, success } from '../utils/responses';
+import { handleError } from '../utils/responses';
 
 @Injectable()
 export class GraphQLMiddleware implements NestMiddleware {
