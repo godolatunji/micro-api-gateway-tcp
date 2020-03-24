@@ -1,0 +1,711 @@
+type AddBidOutput {
+  accepted: Boolean
+  auction: Auction
+  bid: Bid
+}
+
+type Auction {
+  id: String
+  type: String
+  start: Float
+  end: Float
+  status: String
+  stoppedBy: String
+  country: String
+  price: Float
+  oldPrice: Float
+  buyNowPrice: Float
+  buyNowPossible: Boolean
+  reservePossible: Boolean
+  currency: String
+  pickupLocation: String
+  registeredCity: String
+  auctionCity: String
+  invoiceVAT: String
+  lotNumber: String
+  inspection: Inspection
+  highestBid: Float
+  highestBidder: String
+  highestBidderId: String
+  car: Car
+  allowedBidTypes: [String]
+  bids: BidList
+  totalBids: Int
+  bidsLeft: Int
+  favorites: [FavoriteOutput]
+  favorite: Boolean
+  favoriteOf: Int
+  favoriteList: [String]
+  userBiddingStatus: UserBiddingStatus
+  minimumBidIncrease: Float
+  reserve: Boolean
+  stepId: Int
+  carId: String
+  internalId: String
+  autoBidPossible: Boolean
+  visibleRound: Int
+  autoBids: [AutoBid]
+  groupId: String
+  group: DealerGroup
+  createdById: String
+  createdByName: String
+  dealerIds: [String]
+  cancellationReason: String
+  fuel: String
+  blacklists: [ID]
+  flow: String
+  inspectionReport: InspectionReport
+  preAutoBidExpiry: Float
+  preAutoBidPossible: Boolean
+  galleries: [Gallery]
+  updatedById: ID
+  updatedByName: String
+  hideDetails: Boolean
+  colorBodyPartMap: ColorBodyPartMap
+  allBidders: [ID]
+  cancelledWhileRunning: Boolean
+  createdAt: String
+  updatedAt: String
+  # indicates if sellingData can be cancelled
+  cancelSellingData: Boolean
+  cancelledBy: User
+  sellerExpectationPrice: Float
+  sellingPrice: Float
+}
+
+type AuctionConfig {
+  id: ID
+  kind: String
+  duration: String
+  bidAmount: Int
+}
+
+type AuctionEndedSubscriptionOutputType {
+  auction: Auction
+  nextInSchedule: Auction
+}
+
+scalar AuctionFlowConfig
+
+type AuctionList {
+  list: [Auction]
+  quantity: Int
+  count: Int
+}
+
+type AuctionListSubscriptionOutputType {
+  auction: [Auction]
+}
+
+type AuctionSubscriptionOutputType {
+  auction: Auction
+}
+
+enum AUTO_BID_TYPE {
+  REGULAR
+  PRE_AUTO_BID
+}
+
+type AutoBid {
+  id: String
+  auctionId: String
+  userId: String
+  userEmail: String
+  maxBid: Float
+  isValid: Boolean
+  currentPrice: Float
+  createdAt: Float
+  type: String
+}
+
+type AutoBidList {
+  list: [AutoBid]
+  count: Int
+}
+
+type Bid {
+  id: String
+  auctionId: String
+  user: String
+  userId: String
+  userEmail: String
+  amount: Float
+  bidType: String
+  status: String
+  currency: String
+  createdAt: Float
+  updatedAt: String
+  placedByEmail: String
+  placedById: String
+  causedByUserId: String
+  causedByUserEmail: String
+}
+
+enum BID_TYPE {
+  BUY_NOW
+  REGULAR
+  RESERVE
+  AUTO_BID
+  PRE_AUTO_BID
+}
+
+type BidList {
+  list: [Bid]
+  quantity: Int
+}
+
+type CancelAuction {
+  cancelled: Boolean
+}
+
+type Car {
+  make: String
+  model: String
+  trim: String
+  year: Int
+  mileage: Int
+  fuel: String
+  chassisColor: String
+  power: String
+  transmission: String
+  bodyType: String
+}
+
+type CategoryScore {
+  id: String
+  title: String
+  score: Float
+}
+
+scalar ColorBodyPartMap
+
+type Comment {
+  label: String
+  content: String
+}
+
+type Config {
+  auctions: [AuctionConfig]
+}
+
+type Damage {
+  id: String
+  description: String
+}
+
+type DealerGroup {
+  id: ID
+  name: String
+  description: String
+  country: String
+  hide: Boolean
+  dealers: [ID]
+  # deprecated
+  auction: Auction
+  createdById: ID
+  createdByName: String
+  createdAt: String
+  updatedAt: String
+}
+
+type DealerOutput {
+  id: String
+  userId: String
+  maxBidAmount: Float
+  wishList: WishList
+}
+
+type DeletedAuction {
+  id: ID
+  carId: ID
+  country: String
+}
+
+type DeletedAuctionSubscriptionType {
+  auction: DeletedAuction
+}
+
+type Event {
+  eventId: ID!
+  AuctionAdded(where: [SubscriptionFilter]): AuctionListSubscriptionOutputType
+  AuctionCancelled: AuctionSubscriptionOutputType
+  AuctionConfirmed: AuctionSubscriptionOutputType
+  AuctionDeleted: DeletedAuctionSubscriptionType
+  AuctionEndReminder: AuctionSubscriptionOutputType
+  AuctionEnded: AuctionEndedSubscriptionOutputType
+  AuctionScheduled: AuctionSubscriptionOutputType
+  AuctionStartReminder: AuctionSubscriptionOutputType
+  AuctionStarted: Auction
+  AuctionUpcoming: AuctionSubscriptionOutputType
+  AuctionUpdated(where: [SubscriptionFilter]): AuctionSubscriptionOutputType
+  BidAdded(where: [SubscriptionFilter]): AddBidOutput
+  PreAutoBidClosing: AuctionSubscriptionOutputType
+}
+
+type FavoriteAuctionList {
+  list: [FavoriteAuctionOutput]
+  count: Int
+}
+
+type FavoriteAuctionOutput {
+  id: ID
+}
+
+type FavoriteOutput {
+  id: String
+  inspectionId: String
+  userId: String
+  user: String
+  createdAt: Float
+}
+
+enum Filter {
+  ALSO
+  NONE
+  ONLY
+}
+
+scalar FilterConfig
+
+type Flow {
+  configId: String
+  flow: [String]
+  config: [FlowConfig]
+  autoBidOption: Boolean
+  autoBidOptionEnabledByDefault: Boolean
+  buyNowEnabledByDefault: Boolean
+}
+
+type FlowConfig {
+  id: String
+  qcInspection: Boolean
+  requiredFields: [String]
+  defaultGroup: DealerGroup
+  allowedBidTypes: [String]
+}
+
+input FromToFilter {
+  from: Int
+  to: Int
+}
+
+input FromToFilterDate {
+  from: String
+  to: String
+}
+
+type Gallery {
+  # gallery title
+  titleId: String
+  # gallery images
+  images: [Image]
+}
+
+type GroupList {
+  count: Int
+  list: [DealerGroup]
+}
+
+type Image {
+  id: ID
+  description: String
+  tags: [String]
+  originalGalleryTitleId: String
+}
+
+type Inspection {
+  id: String
+  configId: String
+  damages: [Damage]
+  comments: [Comment]
+  categories: [CategoryScore]
+  report: Report
+  relatedAuctions: [RelatedAuction]
+}
+
+type InspectionReport {
+  email: String
+  phone: String
+  forename: String
+  surname: String
+  location: String
+}
+
+type Mutation {
+  addDealersToGroup(groupId: ID!, dealerIds: [ID]!): Boolean
+  confirmAuction(
+    country: String!
+    auctionId: ID!
+    amount: Float
+    winner: ID
+  ): Boolean
+  createDealerGroup(
+    name: String!
+    description: String
+    country: String!
+  ): DealerGroup
+  createDealerWishList(
+    # name of the wish list to be used in dealer api
+    name: String!
+    # id of a dealer for which wish list should be added,
+    # if not present, the one from token is used
+    #
+    # **Note:** only dealer supervisor may edit wish lists of another user
+    dealerId: ID
+    # auction fields to be directly applied in the auction query,
+    # validated with the currently existing auction filters
+    auctionWishListFilter: WishList
+    # free defined filters for inspection report, not validated
+    inspectionWishListFilter: WishList
+  ): WishList
+  deleteDealerGroup(id: ID!): Boolean
+  deleteDealerWishList(
+    id: ID!
+    # id of a dealer for which wish list should be added.
+    # if not present, the one from token is used
+    # *Note* only dealer supervisor may edit wish lists of another user
+    dealerId: ID
+  ): Boolean
+  migrateDealers: Boolean
+  removeDealersFromGroup(groupId: ID!, dealerIds: [ID]!): Boolean
+  updateDealerGroup(
+    id: ID!
+    name: String
+    description: String
+    hide: Boolean
+  ): DealerGroup
+  updateDealerWishList(
+    id: ID!
+    # name of the wish list to be used in dealer api
+    name: String
+    # id of a dealer for which wish list should be added.
+    # if not present, the one from token is used
+    # *Note* only dealer supervisor may edit wish lists of another user
+    dealerId: ID
+    # auction fields to be directly applied in the auction query,
+    # validated with the currently existing auction filters
+    auctionWishListFilter: WishList
+    # free defined filters for inspection report, not validated
+    inspectionWishListFilter: WishList
+  ): WishList
+}
+
+input Order {
+  field: String!
+  order: String
+}
+
+type Query {
+  addBid(
+    # UUIDv4 of an auction
+    auctionId: String!
+    amount: Float!
+    bidType: BID_TYPE = REGULAR
+    # ID of a dealer for whom the bid will be placed (only auctioneers are
+    # allowed to place bids for somebody else)
+    bidForUser: String
+  ): AddBidOutput
+  auctionFlowConfig(configId: String, country: String): AuctionFlowConfig
+  auction(
+    # > UUIDv4 of an auction
+    id: String
+    inspectionId: String
+    # > can be filtered on multiple types of "direct", "longterm", "yardsale", "marketplace" or "realtime"
+    type: [String]
+    # > shortcut country code
+    country: String
+    vehicle: [VehicleFilter]
+    mileage: FromToFilter
+    power: FromToFilter
+    year: FromToFilter
+    price: FromToFilter
+    # > {from: ISO-8601, to: ISO-8601}
+ # dates are included in the filter
+    start: FromToFilterDate
+    # > {from: ISO-8601, to: ISO-8601}
+ # dates are included in the filter
+    end: FromToFilterDate
+    # > cars' possible pickup locations (multiselect)
+    pickupLocation: [String]
+    # > cars' possible registration cities (multiselect)
+    registeredCity: [String]
+    # > cars' possible auction cities (multiselect)
+    auctionCity: [String]
+    # > cars' invoice VAT value
+    invoiceVAT: [String]
+    # > cars' possible lotNumber (multiselect)
+    lotNumber: [String]
+    # * **none**: to not see any expired auctions
+    # * **only**: to see expired auctions only
+    # * **also**: to see expired and non expired auctions
+    #
+    #
+    #  defaults to '_none_'
+    #
+    #  **IMPORTANT**: can be overriden by the "won" parameter
+    expired: String
+    # * **none**: only show auctions where user did not made any biddings
+    # * **also**: show auctions with and without biddings by the user
+    # * **only**: only show auctions where user bid
+    #
+    #
+    #  defaults to '_also_'
+    bidden: String
+    # * **none**: to not see any won auctions
+    # * **also**: to see won and not won auctions
+    # * **only**: to see only won auctions
+    #
+    #
+    #  defaults to '_none_'
+    #
+    #  **IMPORTANT**: The states '_none_' and '_only_' are overriding parameters:
+    #  expired, bidden and status (excluding 'cancelled' auctions)
+    won: String
+    # * **started**: will run in the future
+    # * **running** (virtual status): runs at the moment, so its visible
+    #  to the dealers
+    # * **stopped**: highestBid will win at that time, end was reached,
+    #  delete future auctions OR because it got stopped before manually
+    # * **upcoming** (virtual status): Shows the next running auctions,
+    #  excluded by the inspection which have already a running auction.
+    #  Time interval can be changed (startOffset), default is next 30 minutes.
+    # * **cancelled**: no winner, delete future auctions
+    # * **all**: show all auctions
+    #
+    #
+    #  defaults to 'running and expired auctions'
+    status: String
+    limit: Int
+    offset: Int
+    # > defaults to 1
+    page: Int
+    order: [Order]
+    carId: String
+    internalId: String
+    # > **only**: filter for auctions marked as user's favorites
+    favorite: String
+    # * **none**: to not see any won auctions
+    # * **also**: to see won and not won auctions
+    # * **only**: to see only won auctions
+    #
+    #
+    #  defaults to '_also_'
+    buyNow: String
+    startOffset: Int
+    userBiddingStatus: UserBiddingStatus
+    # > **only**: filter for auctions with bids of type RESERVE
+    reserve: String
+    stepId: Int
+    # >time frame in minutes for which won auctions should be shown
+    wonSince: Int
+    # * **also**: to see auction along with autoBid setting
+    # * **only**: to see auctions only with autoBid setting
+    #
+    #
+    #  defaults to '_also_'
+    autoBid: String
+    groupId: ID
+    # * **also**: to see auction along with auctions restricted to groups
+    # * **only**: to see auctions only restricted to groups
+    # * **none**: to see auctions which are not restricted to any group
+    #
+    #  defaults to '_also_'
+    restricted: Filter
+    auctionWishListFilter: WishList
+    inspectionWishListFilter: WishList
+    noBids: Boolean
+    cancellationReason: String
+    fuel: [String]
+    numberOfOwners: [Int]
+    boughtCondition: [String]
+    flow: [String]
+  ): AuctionList
+  autoBid(
+    # UUIDv4 of an autoBid
+    id: ID
+    # UUIDv4 of an auction
+    auctionId: ID
+    # defaults to 50; if set higher, 50 will be used
+    limit: Int
+    offset: Int
+    page: Int
+    # defaults to `{field: 'createdAt', order: 'ASC'}
+
+    order: Order
+    type: [AUTO_BID_TYPE]
+  ): AutoBidList
+  bid(
+    # UUIDv4 of a bid
+    id: ID
+    # UUIDv4 of an auction
+    auctionId: ID
+    # defaults to 50; if set higher, 50 will be used
+    limit: Int
+    offset: Int
+    page: Int
+    # defaults to `{field: 'createdAt', order: 'ASC'}
+
+    order: Order
+  ): BidList
+  cancelAuction(
+    #  UUIDv4 of an auction to be cancelled
+    #
+    #  **IMPORTANT** inspectionId has precedence if provided
+    auctionId: ID
+    #  UUIDv4 of an inspection for which an auction should be cancelled
+    #
+    #  The current / upcoming or the last expired auction will be cancelled
+    inspectionId: ID
+    cancellationReason: String
+    cancelSellingData: Boolean = false
+  ): CancelAuction
+  currentAuctions(
+    country: String
+    limit: Int
+    offset: Int
+    page: Int
+    order: Order
+  ): AuctionList
+  dealerGroup(
+    id: ID
+    name: String
+    description: String
+    country: String
+    hide: Boolean = false
+    limit: Int = 20
+    page: Int = 1
+    sort: [Sort] = [{ field: "createdAt", order: DESC }
+]
+  ): GroupList
+  dealer(userId: ID!): DealerOutput
+  extendAuction(auctionId: ID!, timeInMin: Int!): Auction
+  favorite(
+    inspectionId: String
+    # max & default value is 50
+    limit: Int
+  ): FavoriteAuctionList
+  filterConfig(country: String!): FilterConfig
+  getConfig(id: ID!): Config
+  flow(country: String!): Flow
+  removeFavorite(inspectionId: String!): Boolean
+  startAuction(
+    country: String!
+    inspectionId: String!
+    # unix time, when the auction workflow should start (default: now)
+    start: Float
+    make: String!
+    model: String!
+    trim: String!
+    year: Int!
+    mileage: Int!
+    power: Int
+    chassisColor: String!
+    fuel: String!
+    transmission: String!
+    bodyType: String
+    price: Float
+    oldPrice: Float
+    # enables the buyNow option if provided
+    buyNowPrice: Float
+    # enables auto bid option if provided
+    autoBidPossible: Boolean
+    currency: String!
+    inspectionReport: String!
+    # depending on the chosen flow, some query args may become mandatory
+    flow: String!
+    carId: String
+    internalId: String
+    configId: String
+    galleries: String
+    damages: String
+    comments: String
+    categories: String
+    groupId: String
+    hasQCInspection: Boolean
+    whiteList: [ID]
+    blackList: [ID]
+    preAutoBidPossible: Boolean
+    colorBodyPartMap: String
+  ): StartAuction
+  stopAuction(auctionId: ID!): StopAuction
+  updatePricing(
+    auctionId: ID!
+    price: Float
+    buyNowPrice: Float
+    buyNowPossible: Boolean
+    upcomingAuctions: Boolean
+  ): Boolean
+  upsertDealer(userId: ID!, maxBidAmount: Float): DealerOutput
+  upsertFavorite(inspectionId: String!): UpsertFavorite
+}
+
+type RelatedAuction {
+  id: String
+  start: Float
+  end: Float
+  type: String
+  status: String
+}
+
+scalar Report
+
+input Sort {
+  field: String = "createdAt"
+  order: SORTORDER = DESC
+}
+
+enum SORTORDER {
+  ASC
+  DESC
+}
+
+type StartAuction {
+  started: Boolean
+  notSetInAuction: Boolean
+  auctions: [StartedAuctionsDetails]
+}
+
+type StartedAuctionsDetails {
+  id: ID
+  start: Float
+}
+
+type StopAuction {
+  stopped: Boolean
+}
+
+type Subscription {
+  auction(lastEventId: ID): Event
+}
+
+input SubscriptionFilter {
+  value: [String!]!
+  field: String!
+}
+
+type UpsertFavorite {
+  favorite: FavoriteOutput
+  added: Boolean
+  updated: Boolean
+}
+
+type User {
+  email: String
+  id: ID
+}
+
+enum UserBiddingStatus {
+  NON_PARTICIPANT
+  WINNING
+  LOSING
+  WON
+  LOST
+}
+
+input VehicleFilter {
+  make: String
+  model: String
+}
+
+scalar WishList
+

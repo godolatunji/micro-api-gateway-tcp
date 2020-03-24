@@ -1,0 +1,341 @@
+type AssetList {
+  list: [AssetOutput]
+  count: Int
+}
+
+type AssetOutput {
+  id: ID
+  country: COUNTRY
+  comment: String
+  label: String
+  fileName: String
+  fileType: String
+  publicLink: String
+}
+
+input AssetUpload {
+  country: COUNTRY!
+  comment: String
+  label: String
+  file: String
+  fileType: String
+  fileName: String
+}
+
+enum COUNTRY {
+  CL
+  ID
+  KN
+  MX
+  NG
+  PK
+  TR
+  AR
+  CO
+  ZA
+  GL
+  IN
+  CB
+  PL
+  AE
+  SM
+  GH
+  KE
+}
+
+scalar DateISOString
+
+type DeleteDocumentOutput {
+  document: [Document]
+}
+
+type Document {
+  id: ID
+  comment: String
+  category: String
+  visibility: VISIBILITY
+  fileType: String
+  fileName: String
+  fileSize: Float
+  entity: String
+  uploader: String
+  reference: String
+  size: Int
+  status: String
+  createdAt: DateISOString
+  updatedAt: DateISOString
+  deletedAt: DateISOString
+  createdByName: String
+  createdById: String
+  updatedByName: String
+  updatedById: String
+  deletedByName: String
+  deletedById: String
+}
+
+type DocumentDownloadLink {
+  id: ID
+  link: String
+}
+
+input DocumentFromExistingFile {
+  # path to source file
+  path: String!
+  bucket: String!
+  # can be inspectionId / carId ...
+  reference: String!
+  fileName: String!
+  fileType: String
+  category: String
+  comment: String
+  entity: String!
+  visibility: VISIBILITY
+  status: String
+}
+
+type DocumentLink {
+  document: Document
+  link: String
+  template: TEMPLATE
+}
+
+type DocumentList {
+  list: [Document]
+  count: Int
+}
+
+input DocumentUpdate {
+  id: String!
+  category: String
+  comment: String
+  entity: String
+  visibility: VISIBILITY
+  file: String
+  fileType: String
+  fileName: String
+  status: String
+  reference: String
+}
+
+input DocumentUpload {
+  category: String
+  comment: String
+  entity: String
+  reference: String
+  visibility: VISIBILITY
+  file: String!
+  fileType: String
+  fileName: String!
+  status: String
+}
+
+type Event {
+  eventId: ID!
+  correlationId: String
+  DocumentCreated: SaveDocumentOutput
+  DocumentDeleted: DeleteDocumentOutput
+  DocumentUpdated: SaveDocumentOutput
+}
+
+input FromToDateFilter {
+  from: DateISOString
+  to: DateISOString
+}
+
+type History {
+  id: ID
+  referenceId: ID
+  typeId: ID
+  type: String
+  field: String
+  value: String
+  updatedById: ID
+  updatedByEmail: String
+  operation: String
+  createdAt: DateISOString
+  updatedAt: DateISOString
+  deletedAt: DateISOString
+}
+
+type HistoryList {
+  list: [History]
+  count: Int
+}
+
+type MetaInfo {
+  logoImage: String
+  brandColor: String
+  groupBackgroundColor: String
+  groupFontColor: String
+  headerLogo: String
+  footerLogo: String
+  firstPageLogo: String
+  lastPageLogo: String
+  displayCBEAtStart: Boolean
+  printCBE: Boolean
+}
+
+input MetaInfoInput {
+  logoImage: String
+  brandColor: String
+  groupBackgroundColor: String
+  groupFontColor: String
+  headerLogo: String
+  footerLogo: String
+  firstPageLogo: String
+  lastPageLogo: String
+  displayCBEAtStart: Boolean = true
+  printCBE: Boolean = false
+}
+
+type Mutation {
+  createPrintPreference(
+    name: String!
+    country: COUNTRY!
+    metaInfo: MetaInfoInput
+  ): PrintPreference
+  deleteDocument(documentIds: [String!]): Boolean
+  deletePrintPreference(id: ID!): Boolean
+  updateDocument(documents: [DocumentUpdate!]): [Document]
+  updatePrintPreference(
+    id: ID!
+    name: String
+    metaInfo: MetaInfoInput
+  ): PrintPreference
+}
+
+enum ORDER {
+  ASC
+  DESC
+}
+
+type PdfDataOutput {
+  id: ID
+  link: String
+}
+
+type PrintPreference {
+  id: ID
+  name: String
+  country: COUNTRY
+  metaInfo: MetaInfo
+}
+
+type PrintPreferenceList {
+  list: [PrintPreference]
+  count: Int
+}
+
+type Query {
+  asset(
+    id: [String]
+    country: COUNTRY!
+    label: [String]
+    fileName: String
+    fileType: [String]
+    limit: Int = 20
+    page: Int = 0
+  ): AssetList
+  createDocumentFromExistingFile(
+    documents: [DocumentFromExistingFile!]!
+  ): [Document]
+  document(
+    id: [String]
+    reference: [String]
+    category: [String]
+    entity: [String]
+    visibility: [VISIBILITY]
+    fileName: String
+    uploader: [String]
+    fileType: [String]
+    limit: Int = 20
+    page: Int = 1
+    status: String
+    sort: [Sort]
+    createdById: String
+    createdByName: String
+    createdAt: FromToDateFilter
+  ): DocumentList
+  documentDownloadLink(documentIds: [ID!]!): [DocumentDownloadLink]
+  downloadDocument(
+    documentIds: [String]!
+    zipFile: Boolean
+    preview: Boolean = false
+  ): String
+  generateDocument(
+    carId: ID
+    inspectionId: ID
+    transitId: ID
+    country: COUNTRY!
+    template: TEMPLATE!
+    printPreferenceId: ID
+    isPublic: Boolean
+    bookingCode: String
+  ): DocumentLink
+  generatePdf(
+    template: String!
+    filename: String!
+    data: String!
+    reference: String!
+  ): PdfDataOutput
+  history(
+    referenceId: ID!
+    documentId: ID
+    sort: [Sort] = [{ field: "createdAt", order: DESC }
+]
+  ): HistoryList
+  printPreference(
+    id: ID
+    name: String
+    countries: [COUNTRY]
+    limit: Int = 20
+    page: Int = 1
+  ): PrintPreferenceList
+  uploadAsset(assets: [AssetUpload!]!): [AssetOutput]
+  uploadDocument(documents: [DocumentUpload!]!): [Document]
+}
+
+type SaveDocumentOutput {
+  document: [Document]
+}
+
+input Sort {
+  field: String = "updatedAt"
+  order: ORDER = DESC
+}
+
+type Subscription {
+  document(lastEventId: ID): Event
+}
+
+enum TEMPLATE {
+  HAND_OVER
+  RECEIPT
+  TRANSIT
+  PICKUP
+  MANDATODECOMPRA
+  SOLICITUDDEPAGO
+  DELIVERY
+  ALL
+  INSPECTION
+  SALE_RECEIPT
+  SALE_TOKEN_RECEIPT
+  PURCHASE_TOKEN_RECEIPT
+  PURCHASE_AGREEMENT
+  PURCHASE_RECEIPT
+  PAYMENT_RECEIPT
+  PURCHASE_CONTRACT
+  SIFM
+  PURCHASE_CONTRACT_B2B_NO_VAT
+  PURCHASE_CONTRACT_B2B_VAT
+  SELLER_DECLARATION
+  TEST_DRIVE_AGREEMENT
+  CANCEL_INSURANCE
+}
+
+enum VISIBILITY {
+  internal
+  all
+  buyer
+}
+

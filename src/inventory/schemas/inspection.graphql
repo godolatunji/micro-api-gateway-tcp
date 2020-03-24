@@ -1,0 +1,562 @@
+type Approval {
+  id: ID
+  country: COUNTRY
+  inspectionId: ID
+  inspection: Inspection
+  version: Int
+  qualityCheckStatus: QUALITY_CHECK_STATUS
+  qualityCheckRating: Int
+  reason: REASON
+  comments: String
+  updatedById: String
+  updatedByEmail: String
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+}
+
+type ApprovalList {
+  list: [Approval]
+  count: Int
+}
+
+scalar AvailableSlot
+
+type AvailableSlotsList {
+  slots: [AvailableSlot]
+  inspectionPoint: InspectionPoint
+}
+
+type Booking {
+  id: String
+  code: String
+  startTime: String
+  endTime: String
+  clientId: String
+}
+
+type BookingsList {
+  bookings: [Booking]
+}
+
+type Car {
+  make: String
+  model: String
+  trim: String
+  year: Int
+  mileage: Int
+  fuel: String
+  chassisColor: String
+  horsepower: Int
+  transmission: String
+  bodyType: String
+}
+
+type Category {
+  id: ID
+  title: String
+  score: Float
+  grade: String
+}
+
+type CitiesList {
+  list: [String]
+}
+
+input ClientData {
+  name: String!
+  email: String
+  phone: String
+}
+
+scalar ColorBodyPartMap
+
+type Comments {
+  label: String
+  content: String
+}
+
+type Config {
+  config: ConfigScalar
+}
+
+scalar ConfigScalar
+
+enum COUNTRY {
+  CL
+  ID
+  KN
+  MX
+  NG
+  PK
+  TR
+  AR
+  CO
+  ZA
+  GL
+  IN
+  CB
+  PL
+  AE
+  SM
+  GH
+  KE
+}
+
+type Damages {
+  id: ID
+  description: String
+}
+
+input DamageUploadType {
+  description: String
+  image: String
+}
+
+# ISO Date String ISO_8601
+scalar DateISOString
+
+input DateTimeRange {
+  from: String
+  to: String
+}
+
+type DeleteApprovalOutput {
+  id: String
+  inspectionId: String
+  carId: ID
+  accepted: Boolean
+}
+
+type Deleted {
+  deleted: Boolean
+}
+
+type DeleteInspectionOutput {
+  accepted: Boolean
+  id: String
+  carId: String
+}
+
+type Event {
+  eventId: ID!
+  correlationId: String
+  ApprovalCreated: SaveApprovalOutput
+  ApprovalDeleted: DeleteApprovalOutput
+  ApprovalUpdated: SaveApprovalOutput
+  InspectionCreated: SaveInspectionOutput
+  InspectionDeleted: DeleteInspectionOutput
+  InspectionLinked: SaveInspectionOutput
+  InspectionUnlinked: DeleteInspectionOutput
+  InspectionUpdated: SaveInspectionOutput
+}
+
+type Gallery {
+  # gallery title
+  titleId: String
+  # gallery images
+  images: [Image]
+}
+
+input GalleryInput {
+  titleId: String!
+  images: [ImageInput]
+}
+
+type Image {
+  id: ID
+  imageConfigId: String
+  description: String
+  tags: [String]
+  originalGalleryTitleId: String
+}
+
+input ImageInput {
+  id: ID
+  image: String
+  description: String
+  tags: [String]
+  imageConfigId: String
+}
+
+input ImageUploadType {
+  id: ID!
+  image: String!
+}
+
+type Inspection {
+  id: ID
+  country: String
+  inspectorId: ID
+  inspector: String
+  approvals: [Approval]
+  lastEditor: String
+  configId: String
+  type: String
+  originalInspection: ID
+  qcScore: Float
+  nonMatchingFields: [String]
+  car: Car
+  report: Report
+  damages: [Damages]
+  galleries: [Gallery]
+  comments: [Comments]
+  purchased: Boolean
+  inAuction: Float
+  createdAt: Float
+  updatedAt: Float
+  startTime: Float
+  endTime: Float
+  carId: ID
+  internalId: String
+  categories: [Category]
+  isCarCreated: Boolean
+  qcInspectionId: ID
+  originalInspectionCarId: ID
+  locationPlaceId: ID
+  colorBodyPartMap: ColorBodyPartMap
+}
+
+enum INSPECTION_TYPE {
+  MERGED
+  ORIGINAL
+}
+
+type InspectionHistory {
+  id: ID
+  hash: String
+  entity: String
+  operation: String
+  createdAt: DateISOString
+  createdBy: String
+  changes: [KeyValue]
+}
+
+type InspectionHistoryList {
+  count: Int
+  list: [InspectionHistory]
+}
+
+type InspectionList {
+  list: [Inspection]
+  count: Int
+}
+
+type InspectionPoint {
+  id: ID
+  shortId: String
+  title: String
+  country: String
+  city: String
+  address1: String
+  address2: String
+  zipcode: String
+  timezone: String
+  timezoneOffset: String
+  inspectors: [String]
+  lat: String
+  lng: String
+}
+
+type InspectionPointList {
+  list: [InspectionPoint]
+  count: Int
+}
+
+type KeyValue {
+  key: String
+  value: String
+}
+
+type Mutation {
+  migrateInspectorId: Boolean
+}
+
+input NumberRange {
+  from: Int
+  to: Int
+}
+
+enum QUALITY_CHECK_STATUS {
+  Approved
+  Rejected
+}
+
+type Query {
+  approval(
+    id: ID
+    country: COUNTRY
+    inspectionId: ID
+    qualityCheckStatus: QUALITY_CHECK_STATUS
+    qualityCheckRating: Int
+    reason: REASON
+    sort: [Sort]
+    limit: Int
+    page: Int
+  ): ApprovalList
+  availableSlots(
+    # one of the inspectionPoint or placeId is mandatory
+    inspectionPoint: ID
+    placeId: ID
+    # date in the following format '`YYYY-MM-DD`'
+    from: String
+    # date in the following format '`YYYY-MM-DD`'
+    #
+    # max difference beetwen `'from'` and `'to'` is 28 days
+    to: String
+  ): AvailableSlotsList
+  book(
+    inspectionPoint: ID!
+    # date in the following format '`YYYY-MM-DD`'
+    date: String!
+    # time in the following format '`HH:mm:ss`'
+    time: String!
+    # one of the clientId or clientData is mandatory
+    clientId: String
+    clientData: ClientData
+    # comment to be added, if additionalField exist for the inspection
+    # point's company. Set of values for intake for in stringified json
+    comment: String
+    # comments field in appointment
+    comments: String
+  ): BookingsList
+  changeAuction(
+    inspectionId: ID!
+    # should correspond with the '`start`' field of the first scheduled auction,
+    # if set to 0 the inspection will be listed as an unauctioned inspection
+    inAuction: Float!
+  ): Inspection
+  cities(country: String!): CitiesList
+  config(
+    # UUIDv4 of the required config,
+    # if not provided the current config for the given country will be returned
+    id: ID
+    country: String
+  ): Config
+  createApproval(
+    country: COUNTRY!
+    inspectionId: ID!
+    qualityCheckStatus: QUALITY_CHECK_STATUS!
+    qualityCheckRating: Int!
+    reason: REASON
+    comments: String
+  ): Approval
+  createCar(inspectionId: ID!): Boolean
+  createInspection(
+    configId: String!
+    # two character country code
+    country: String!
+    inspector: String!
+    # full report depending on the config (JSON)
+    report: String!
+    images: [ImageUploadType]
+    damages: [DamageUploadType]
+    galleries: [GalleryInput]
+    startTime: Float
+    endTime: Float
+    type: String
+    # only if it's a QC inspection
+    originalInspection: ID
+    # links a car with the inspection
+    carId: String
+    internalId: String
+    # whether a car should be created based on the report data
+    createCar: Boolean
+    # all temporary images are going to be synced in background
+    sessionId: ID
+  ): Inspection
+  createSessionId: ID
+  deleteApproval(id: ID!): Deleted
+  deleteInspection(id: ID!): Deleted
+  editBook(
+    # country code
+    country: String!
+    bookingId: String!
+    inspectionPoint: ID!
+    # date in the following format '`YYYY-MM-DD`'
+    date: String!
+    # time in the following format '`HH:mm:ss`'
+    time: String!
+    # one of the clientId or clientData is mandatory
+    clientId: String!
+    # comment to be added, if additionalField exist for the inspection
+    # point's company. Set of values for intake for in stringified json
+    comment: String
+    # comments field in appointment
+    comments: String
+    # true if date time and place not changed
+    sameBookData: Boolean
+    # service id
+    eventId: String
+    # inspector id
+    unitId: String
+  ): BookingsList
+  inspectionHistory(
+    inspectionId: ID!
+    country: COUNTRY!
+    limit: Int = 50
+    page: Int = 0
+  ): InspectionHistoryList
+  inspectionPoint(
+    id: ID
+    country: String
+    title: String
+    sort: Sort
+    limit: Int
+    page: Int
+    city: String
+    deactiveInspectionPoints: Boolean
+  ): InspectionPointList
+  inspection(
+    id: [ID]
+    country: String
+    inspector: String
+    # * _yes_
+    # * _no_
+    # * _both_
+    purchased: String
+    # * _yes_
+    # * _no_
+    # * _both_
+    inAuction: String
+    # * _none_
+    # * _also_
+    # * _only_
+    qc: String
+    # search for qc inspection by its original inspection ID
+    original: ID
+    sort: [Sort] = [{ field: "createdAt", order: "ASC" }
+]
+    # defaults to 10, max value is 100
+    limit: Int
+    page: Int
+    # search by a value present in inspection report
+    report: String
+    carId: [ID]
+    internalId: String
+    # multiple search filters in inspection report, case insensitive
+    reportFilter: [ReportFilter!]
+    createdAt: DateTimeRange
+    # will return inspection only with or without qc inspections when set
+    hasQC: Boolean
+    qcReport: Boolean = false
+    locationPlaceId: [ID]
+    bookingCode: String
+  ): InspectionList
+  linkCar(id: ID!, carId: ID): Boolean
+  migratePlaceId: Boolean
+  startAuction(
+    # inspection ID for which auctions should be started
+    id: ID
+    # carId linked to an inspection for which auctions should be started
+    #
+    # **NOTE**: If both '`id`' and '`carId`' are provided, '`id`' has precedence
+    carId: ID
+    price: Float
+    oldPrice: Float
+    buyNowPrice: Float
+    start: Float
+    flow: String!
+    autoBidPossible: Boolean = false
+    inspectionType: INSPECTION_TYPE
+    groupId: ID = null
+    whiteList: [ID] = []
+    blackList: [ID] = []
+    preAutoBidPossible: Boolean = false
+  ): Started
+  updateApproval(
+    id: ID!
+    country: COUNTRY
+    inspectionId: ID
+    version: Int
+    qualityCheckStatus: QUALITY_CHECK_STATUS
+    qualityCheckRating: Int
+    reason: REASON
+    comments: String
+  ): Approval
+  updateInspection(
+    id: ID!
+    # two character country code
+    country: String!
+    configId: String
+    inspector: String!
+    # full report depending on the config (JSON)
+    report: String!
+    # deprecated, use galleries
+    images: [ImageUploadType]
+    # deprecated, use galleries
+    damages: [DamageUploadType]
+    galleries: [GalleryInput]
+    # links a car with the inspection
+    carId: String
+    internalId: String
+    # whether a car should be created based on the report data
+    createCar: Boolean
+    # all images are already uploaded in background
+    sessionId: ID
+  ): Inspection
+  updatePrice(id: ID!, price: Float!): Updated
+  uploadImage(
+    sessionId: ID!
+    image: String!
+    galleryId: ID
+    # deprecated
+    imageId: ID
+  ): ID
+}
+
+enum REASON {
+  VARIANT_ISSUE
+  OPTION_ISSUE
+  NUMBER_PLATE
+  ODOMETER
+  DOCUMENT_DETAILS
+  POOR_IMAGE
+  TEST_REPORT
+  WRONG_DETAIL
+  COMMENTS_ISSUES
+  NO_REASON
+  OTHER
+}
+
+scalar Report
+
+input ReportFilter {
+  field: String!
+  value: ReportFilterScalar
+  range: NumberRange
+}
+
+scalar ReportFilterScalar
+
+type SaveApprovalOutput {
+  approval: Approval
+}
+
+type SaveInspectionOutput {
+  inspection: Inspection
+}
+
+input Sort {
+  field: String = "createdAt"
+  order: String = "ASC"
+}
+
+type Started {
+  started: Boolean
+  auctions: [StartedAuctionsDetails]
+}
+
+type StartedAuctionsDetails {
+  id: ID
+  start: Float
+}
+
+type Subscription {
+  inspection(lastEventId: ID): Event
+}
+
+type Updated {
+  updated: Boolean
+}
+
