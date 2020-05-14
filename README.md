@@ -42,3 +42,13 @@ $ yarn test:cov
 
 ## Micorservices
 - [micro user service](#)
+- [micro authorization service](#)
+- [micro inventory service](#)
+
+
+## Order of starting application
+The the aplication in the folowwing order
+- micro inventory service
+- micro user service
+- micro authorization service
+- micro api gatewway
