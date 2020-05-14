@@ -1,10 +1,36 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
+import { RoleDto } from './role.dto';
 export class UserDto {
   @IsOptional()
   @ApiPropertyOptional()
-  id?: number;
+  id?: string;
+
+  @ApiProperty()
+  readonly firstname: string;
+
+  @ApiProperty()
+  readonly lastname: string;
+
+  @ApiProperty()
+  readonly email: string;
 
   @ApiPropertyOptional()
-  name: string;
+  readonly fields?: { [key: string]: string | number };
+
+  @IsOptional()
+  @ApiPropertyOptional()
+  active?: string;
+
+  @IsOptional()
+  @ApiPropertyOptional()
+  createdAt?: string;
+
+  @IsOptional()
+  @ApiPropertyOptional()
+  updatedAt?: string;
+
+  @IsOptional()
+  @ApiPropertyOptional()
+  roles?: RoleDto[];
 }

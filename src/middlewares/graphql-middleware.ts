@@ -1,11 +1,11 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { InventoryService } from '../inventory/inventory.service';
-import { handleError } from '../utils/responses';
+import { TYPES } from 'types';
+import { ProxyService } from '../proxy';
 
 @Injectable()
 export class GraphQLMiddleware implements NestMiddleware {
-  constructor(private readonly inventoryService: InventoryService) {}
+  constructor(private readonly proxyService: ProxyService) {}
 
   async use(req: Request, res: Response, next: () => any) {
     if (req.body.operationName === 'IntrospectionQuery') {
@@ -29,14 +29,12 @@ export class GraphQLMiddleware implements NestMiddleware {
       return res.status(404);
     }
 
-    try {
-      const headers: Request['headers'] = req.headers;
-      const data = await this.inventoryService
-        .queryBackend(req.body.query, cmd, headers)
-        .toPromise();
-      return res.json(data);
-    } catch (err) {
-      return handleError(res, err.message);
-    }
+    return this.proxyService.send(
+      req,
+      res,
+      TYPES.INVENTORY_SVC,
+      cmd,
+      req.body.query,
+    );
   }
 }

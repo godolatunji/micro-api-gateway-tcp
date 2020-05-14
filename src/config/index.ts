@@ -21,6 +21,9 @@ const schema = joi
     // User Service
     USER_SVC: joi.string().required(),
     INVENTORY_SVC: joi.string().required(),
+    AUTHORIZATION_SVC: joi.string().required(),
+
+    REDIS_URL: joi.string().required(),
   })
   .unknown()
   .required();
@@ -37,4 +40,7 @@ export const config = {
 
   userSvc: envVars.USER_SVC,
   inventorySvc: envVars.INVENTORY_SVC,
+  authorizationSvc: envVars.AUTHORIZATION_SVC,
+
+  redisUrl: envVars.REDIS_URL,
 };

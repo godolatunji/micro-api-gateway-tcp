@@ -8,6 +8,7 @@ import * as rateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
 import { AppModule } from './app.module';
 import { config } from './config';
+import { resourceSeed } from './resource.seed';
 
 async function bootstrap() {
   const application = await NestFactory.create(AppModule);
@@ -56,5 +57,7 @@ async function bootstrap() {
   await application.listen(config.port);
   // await application.startAllMicroservicesAsync()
   Logger.log(`API gateway started on port ${config.port}`);
+
+  resourceSeed(application);
 }
 bootstrap();

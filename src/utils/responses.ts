@@ -23,12 +23,6 @@ export const error404 = (res, message = 'resource not found') =>
 export const error500 = (res, message = 'server error') =>
   error(res, message, 500);
 
-export class ResponseDto {
-  status: boolean;
-  message: string;
-  data: any;
-}
-
 export const handleError = (res, message: string) => {
   let status = Number.parseInt(message.substring(0, message.indexOf(':')), 10);
   if (!status) {
