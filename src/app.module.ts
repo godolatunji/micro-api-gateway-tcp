@@ -6,20 +6,26 @@ import {
 } from '@nestjs/common';
 import { AuthorizationController } from './authorization/authorization.controller';
 import { AuthorizationService } from './authorization/authorization.service';
+import { CacheModule } from './cache/cache.module';
 import { graphqlImports } from './graphql.import';
 import { InventoryController } from './inventory/inventory.controller';
 import { microservices } from './microservices.import';
+import { AuthMiddleware } from './middlewares/auth.middleware';
 import { GraphQLMiddleware } from './middlewares/graphql-middleware';
 import { ProxyService } from './proxy';
 import { UserController } from './user/user.controller';
 
 @Module({
-  imports: [...microservices, ...graphqlImports],
+  imports: [...microservices, ...graphqlImports, CacheModule],
   controllers: [UserController, InventoryController, AuthorizationController],
   providers: [AuthorizationService, ProxyService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+
     consumer
       .apply(GraphQLMiddleware)
       .forRoutes(

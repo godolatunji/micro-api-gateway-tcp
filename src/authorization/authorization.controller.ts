@@ -7,6 +7,7 @@ import {
   Put,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
@@ -14,6 +15,8 @@ import { ProxyService } from '../proxy';
 import { ResponseDto, TYPES } from '../types';
 import { RoleDto } from '../user/dtos/role.dto';
 import { UserResponseDto } from '../user/dtos/user-response.dto';
+import { success } from '../utils/responses';
+import { AuthorizationService } from './authorization.service';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { LoginDto } from './dto/login.dto';
@@ -27,6 +30,8 @@ import { LoginDto } from './dto/login.dto';
 export class AuthorizationController {
   constructor(
     @Inject(ProxyService) private readonly proxyService: ProxyService,
+    @Inject(AuthorizationService)
+    private readonly authService: AuthorizationService,
   ) {}
 
   @Post('/login')
@@ -47,6 +52,22 @@ export class AuthorizationController {
       'login',
       req.body,
     );
+  }
+
+  @Post('/logout')
+  @ApiResponse({
+    status: 200,
+    type: UserResponseDto,
+    description: 'returns a successful message',
+  })
+  async logout(
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<ResponseDto> {
+    const reqq = req as any;
+    const user: any = JSON.parse(JSON.stringify(reqq.headers.user));
+    await this.authService.logout(user.id);
+    return success(res, 'user logged out');
   }
 
   @Post('/permission')

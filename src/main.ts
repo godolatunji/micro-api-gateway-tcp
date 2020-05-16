@@ -7,12 +7,16 @@ import * as bodyParser from 'body-parser';
 import * as rateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
 import { AppModule } from './app.module';
+import { CacheService } from './cache/cache.service';
 import { config } from './config';
+import { PermissionGuard } from './guard/permission.guard';
 import { resourceSeed } from './resource.seed';
 
 async function bootstrap() {
   const application = await NestFactory.create(AppModule);
+  const cacheService = application.get(CacheService);
   application.useGlobalPipes(new ValidationPipe());
+  application.useGlobalGuards(new PermissionGuard(cacheService));
   application.use(bodyParser.json());
 
   const corsOption = {
