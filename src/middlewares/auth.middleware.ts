@@ -18,6 +18,13 @@ export class AuthMiddleware implements NestMiddleware {
       return next();
     }
 
+    if (
+      this.excludeGraphQlInspection(req['baseUrl'], req['method']) &&
+      req.body['operationName'] === 'IntrospectionQuery'
+    ) {
+      return next();
+    }
+
     const secret = await this.cacheService.get('app::secret');
 
     const headers = req.headers;
@@ -49,6 +56,26 @@ export class AuthMiddleware implements NestMiddleware {
       { path: '/search/graphql', method: 'GET' },
       { path: '/document/graphql', method: 'GET' },
       { path: '/cardata/graphql', method: 'GET' },
+    ];
+
+    let flag = false;
+    for (const url of ignorePaths) {
+      if (url.path === path && url.method === method) {
+        flag = true;
+        break;
+      }
+    }
+    return flag;
+  }
+
+  excludeGraphQlInspection(path: string, method: string): boolean {
+    const ignorePaths = [
+      { path: '/car/graphql', method: 'POST' },
+      { path: '/auction/graphql', method: 'POST' },
+      { path: '/inspection/graphql', method: 'POST' },
+      { path: '/search/graphql', method: 'POST' },
+      { path: '/document/graphql', method: 'POST' },
+      { path: '/cardata/graphql', method: 'POST' },
     ];
 
     let flag = false;

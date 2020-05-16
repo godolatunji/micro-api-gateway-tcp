@@ -34,7 +34,7 @@ export class PermissionGuard implements CanActivate {
       return true;
     } else {
       const user = JSON.parse(request.headers.user);
-      if (user.permissions.include(currentResource.permissions)) return true;
+      if (user.permissions.includes(currentResource.permissions)) return true;
       else return false;
     }
   }
