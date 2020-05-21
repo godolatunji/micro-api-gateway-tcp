@@ -25,7 +25,7 @@ export class PermissionGuard implements CanActivate {
       await this.cacheService.get(`app::resource-permissions`),
     );
     // tslint:disable-next-line: no-string-literal
-    const url = `${request['method']} ${request._parsedUrl.pathname}`;
+    const url = `${request['method']} ${request.route.path}`;
 
     const currentResource = resourcePermissions.find(doc => doc.url === url);
     if (!currentResource) {
